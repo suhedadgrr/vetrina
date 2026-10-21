@@ -1,0 +1,146 @@
+---
+import { trust, pilot } from '@content/site';
+import { href } from '@lib/url';
+import Icon from './Icon.astro';
+---
+
+<section class="section--tight trust" id="guven" aria-labelledby="guven-title">
+  <div class="container">
+    <h2 id="guven-title" class="sr-only">
+      Neden Vetrina
+    </h2>
+    <ul class="trust__grid">
+      {trust.map((t, i) => (
+        <li class="trust__item glass reveal" style={`--i:${i}`}>
+          <p class="trust__num">
+            <span data-count={t.count}>{t.count}</span>
+            <small>{t.suffix}</small>
+          </p>
+          <p class="trust__label">{t.label}</p>
+          <p class="trust__text">{t.text}</p>
+        </li>
+      ))}
+    </ul>
+
+    <aside class="pilot glass reveal" aria-labelledby="pilot-title">
+      <span class="pilot__badge">
+        <Icon name="spark" size={16} /> {pilot.badge}
+      </span>
+      <div>
+        <h3 id="pilot-title">{pilot.title}</h3>
+        <p>{pilot.text}</p>
+      </div>
+      <a
+        class="btn btn--primary btn--sm"
+        href={href('/#iletisim')}
+        data-track="cta_click"
+        data-track-where="pilot"
+        data-prefill="Pilot Programı"
+      >
+        {pilot.cta}
+      </a>
+    </aside>
+  </div>
+</section>
+
+<style>
+  .trust {
+    padding-top: clamp(3rem, 6vw, 5rem);
+  }
+  .trust__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--sp-4);
+  }
+  .trust__item {
+    padding: clamp(1.1rem, 2.4vw, 1.8rem);
+    display: grid;
+    gap: 0.25rem;
+    align-content: start;
+  }
+  .trust__num {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(2.4rem, 1.6rem + 3vw, 4rem);
+    line-height: 1;
+    letter-spacing: -0.04em;
+    background: linear-gradient(120deg, var(--text), var(--accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-variant-numeric: tabular-nums;
+  }
+  .trust__num small {
+    font-size: 0.34em;
+    letter-spacing: 0;
+    margin-left: 0.2em;
+    font-weight: 700;
+  }
+  .trust__label {
+    font-weight: 700;
+    font-size: var(--fs-sm);
+    margin-top: 0.4rem;
+  }
+  .trust__text {
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+  .pilot {
+    margin-top: var(--sp-5);
+    padding: clamp(1.2rem, 3vw, 2rem);
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: var(--sp-5);
+    align-items: center;
+    border-color: color-mix(in srgb, var(--warm) 45%, var(--glass-border));
+    background: linear-gradient(
+      120deg,
+      color-mix(in srgb, var(--warm) 10%, var(--glass)),
+      var(--glass)
+    );
+  }
+  .pilot__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.9rem;
+    border-radius: var(--r-pill);
+    background: var(--warm);
+    color: #231500;
+    font-weight: 800;
+    font-size: var(--fs-sm);
+    white-space: nowrap;
+  }
+  :global([data-theme='light']) .pilot__badge {
+    background: #ffb84d;
+    color: #231500;
+  }
+  .pilot h3 {
+    font-size: var(--fs-xl);
+    margin-bottom: 0.3rem;
+  }
+  .pilot p {
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+    max-width: 46rem;
+  }
+  @media (max-width: 960px) {
+    .trust__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .pilot {
+      grid-template-columns: 1fr;
+      justify-items: start;
+    }
+  }
+  @media (max-width: 480px) {
+    .trust__grid {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--sp-3);
+    }
+    .trust__item {
+      padding: 1rem;
+    }
+  }
+</style>

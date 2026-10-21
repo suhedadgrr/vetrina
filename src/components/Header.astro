@@ -1,0 +1,219 @@
+---
+import { nav, cta, site } from '@content/site';
+import { href } from '@lib/url';
+import Icon from './Icon.astro';
+import Logo from './Logo.astro';
+---
+
+<header class="hdr" data-header>
+  <div class="container hdr__in">
+    <a class="logo" href={href('/')} aria-label={`${site.name} — ana sayfa`}>
+      <Logo height={48} />
+    </a>
+
+    <nav class="hdr__nav" aria-label="Ana menü">
+      <ul>
+        {nav.map((n) => (
+          <li>
+            <a href={href(n.href)}>{n.label}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="hdr__actions">
+      <button
+        class="icon-btn"
+        type="button"
+        data-theme-toggle
+        aria-label="Temayı değiştir (koyu/açık)"
+      >
+        <Icon name="sun" class="i-sun" />
+        <Icon name="moon" class="i-moon" />
+      </button>
+      <a
+        class="btn btn--primary btn--sm hdr__cta"
+        href={href(cta.primaryHref)}
+        data-magnetic
+        data-track="cta_click"
+        data-track-where="header"
+      >
+        {cta.primary}
+      </a>
+      <button
+        class="icon-btn hdr__burger"
+        type="button"
+        data-menu-toggle
+        aria-expanded="false"
+        aria-controls="mobil-menu"
+        aria-label="Menüyü aç"
+      >
+        <Icon name="menu" class="i-open" />
+        <Icon name="close" class="i-close" />
+      </button>
+    </div>
+  </div>
+
+  <div class="mobile-menu" id="mobil-menu" data-mobile-menu hidden>
+    <nav aria-label="Mobil menü">
+      <ul>
+        {nav.map((n) => (
+          <li>
+            <a href={href(n.href)}>{n.label}</a>
+          </li>
+        ))}
+      </ul>
+      <a
+        class="btn btn--primary"
+        href={href(cta.primaryHref)}
+        data-track="cta_click"
+        data-track-where="mobile-menu"
+      >
+        {cta.primary}
+      </a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .hdr {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: var(--z-header);
+    height: var(--header-h);
+    transition:
+      background var(--dur-2),
+      border-color var(--dur-2),
+      box-shadow var(--dur-2);
+    border-bottom: 1px solid transparent;
+  }
+  .hdr.is-stuck {
+    background: color-mix(in srgb, var(--bg) 78%, transparent);
+    -webkit-backdrop-filter: blur(16px) saturate(150%);
+    backdrop-filter: blur(16px) saturate(150%);
+    border-color: var(--line);
+  }
+  .hdr__in {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-4);
+  }
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.4rem;
+    letter-spacing: -0.03em;
+  }
+  .hdr__nav ul {
+    display: flex;
+    gap: clamp(1rem, 2.4vw, 2.2rem);
+  }
+  .hdr__nav a {
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--text-muted);
+    position: relative;
+    padding: 0.5rem 0.1rem;
+    transition: color var(--dur-1);
+  }
+  .hdr__nav a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0.1rem;
+    height: 2px;
+    background: linear-gradient(90deg, var(--c-violet), var(--c-amber));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--dur-2) var(--ease-out);
+  }
+  .hdr__nav a:hover {
+    color: var(--text);
+  }
+  .hdr__nav a:hover::after {
+    transform: scaleX(1);
+  }
+  .hdr__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+  }
+  .icon-btn {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    color: var(--text);
+    transition:
+      border-color var(--dur-1),
+      transform var(--dur-2) var(--ease-out);
+  }
+  .icon-btn:hover {
+    border-color: var(--accent);
+    transform: rotate(12deg);
+  }
+  :global([data-theme='dark'] .i-sun),
+  :global([data-theme='light'] .i-moon) {
+    display: none;
+  }
+  .hdr__burger {
+    display: none;
+  }
+  .hdr__burger :global(.i-close) {
+    display: none;
+  }
+  .hdr__burger[aria-expanded='true'] :global(.i-open) {
+    display: none;
+  }
+  .hdr__burger[aria-expanded='true'] :global(.i-close) {
+    display: block;
+  }
+  .mobile-menu {
+    position: fixed;
+    inset: var(--header-h) 0 auto 0;
+    background: var(--glass-strong);
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--line);
+    padding: var(--sp-5) var(--gutter) var(--sp-6);
+  }
+  .mobile-menu ul {
+    display: grid;
+    gap: 0.25rem;
+    margin-bottom: var(--sp-5);
+  }
+  .mobile-menu li a:not(.btn) {
+    display: block;
+    padding: 0.9rem 0.2rem;
+    font-family: var(--font-display);
+    font-size: var(--fs-xl);
+    font-weight: 700;
+    border-bottom: 1px solid var(--line);
+  }
+  .mobile-menu .btn {
+    width: 100%;
+  }
+  @media (max-width: 960px) {
+    .hdr__nav,
+    .hdr__cta {
+      display: none;
+    }
+    .hdr__burger {
+      display: grid;
+    }
+  }
+  @media (min-width: 961px) {
+    .mobile-menu {
+      display: none !important;
+    }
+  }
+</style>

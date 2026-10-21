@@ -1,0 +1,76 @@
+name: Deploy
+
+# Varsayılan hedef: GitHub Pages. Cloudflare Pages kullanacaksanız
+# Settings → Variables → DEPLOY_TARGET = cloudflare olarak ayarlayın (README'ye bakın).
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: deploy
+  cancel-in-progress: true
+
+env:
+  # Repo Variables (Settings → Secrets and variables → Actions → Variables):
+  SITE_URL: ${{ vars.SITE_URL || 'https://suhedadgrr.github.io' }}
+  BASE_PATH: ${{ vars.BASE_PATH || '/vetrina' }}
+  PUBLIC_WEB3FORMS_KEY: ${{ vars.PUBLIC_WEB3FORMS_KEY }}
+  PUBLIC_TURNSTILE_SITEKEY: ${{ vars.PUBLIC_TURNSTILE_SITEKEY }}
+  PUBLIC_PLAUSIBLE_DOMAIN: ${{ vars.PUBLIC_PLAUSIBLE_DOMAIN }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+      - run: npm run build
+      - name: Özel alan adı (CNAME)
+        if: ${{ vars.CUSTOM_DOMAIN != '' }}
+        run: echo "${{ vars.CUSTOM_DOMAIN }}" > dist/CNAME
+      - uses: actions/upload-pages-artifact@v3
+        if: ${{ vars.DEPLOY_TARGET != 'cloudflare' }}
+        with:
+          path: dist
+      - uses: actions/upload-artifact@v4
+        if: ${{ vars.DEPLOY_TARGET == 'cloudflare' }}
+        with:
+          name: dist
+          path: dist
+
+  deploy-pages:
+    needs: build
+    if: ${{ vars.DEPLOY_TARGET != 'cloudflare' }}
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+
+  deploy-cloudflare:
+    needs: build
+    if: ${{ vars.DEPLOY_TARGET == 'cloudflare' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+      - uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=${{ vars.CLOUDFLARE_PROJECT || 'vetrina' }}

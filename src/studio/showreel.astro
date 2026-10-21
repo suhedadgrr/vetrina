@@ -1,0 +1,331 @@
+---
+import Studio from '@layouts/Studio.astro';
+import BrandMark from '@components/BrandMark.astro';
+import ConceptArt from '@components/ConceptArt.astro';
+import { works } from '@content/work';
+---
+
+<Studio title="Showreel şablonu" width={1280} height={720}>
+  <div class="reel" id="reel">
+    <span class="blob b1" id="b1"></span>
+    <span class="blob b2" id="b2"></span>
+    <span class="blob b3" id="b3"></span>
+    <span class="gridl"></span>
+
+    <div class="s s1" id="s1">
+      <p class="w">
+        <span id="w1">Hareket,</span>
+      </p>
+      <p class="w">
+        <span id="w2">markanızın</span>
+      </p>
+      <p class="w g">
+        <span id="w3">sesidir.</span>
+      </p>
+    </div>
+
+    <div class="s s2" id="s2">
+      <div class="row r1" id="r1">
+        {[...works, ...works].map((w) => (
+          <div class="card">
+            <ConceptArt work={w} ratio="4 / 5" animated={false} label={false} />
+          </div>
+        ))}
+      </div>
+      <div class="row r2" id="r2">
+        {[...works.slice().reverse(), ...works.slice().reverse()].map((w) => (
+          <div class="card">
+            <ConceptArt work={w} ratio="16 / 10" animated={false} label={false} />
+          </div>
+        ))}
+      </div>
+      <p class="cap" id="cap">
+        Sosyal · Web · Kimlik · B2B · Motion
+      </p>
+    </div>
+
+    <div class="s s3" id="s3">
+      <span class="ring" id="ring1"></span>
+      <span class="ring" id="ring2"></span>
+      <span class="ring" id="ring3"></span>
+      <p class="big" id="big">
+        <span class="num">5</span>
+        <span class="unit"> saniyede</span>
+        <br />
+        <em>güven.</em>
+      </p>
+    </div>
+
+    <div class="s s4" id="s4">
+      <div class="logo" id="logo">
+        <BrandMark size={110} />
+        <b>Vetrina</b>
+      </div>
+      <p class="tag" id="tag">
+        Ücretsiz Mini Analiz İste
+      </p>
+    </div>
+  </div>
+</Studio>
+
+<script is:inline>
+  const D = 9; // sn, döngü süresi
+  const $ = (id) => document.getElementById(id);
+  const cl = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+  const ease = (t) => 1 - Math.pow(1 - cl(t), 3);
+  const easeIO = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+  const seg = (t, a, b) => cl((t - a) / (b - a));
+  const els = [
+    'b1',
+    'b2',
+    'b3',
+    's1',
+    's2',
+    's3',
+    's4',
+    'w1',
+    'w2',
+    'w3',
+    'r1',
+    'r2',
+    'cap',
+    'ring1',
+    'ring2',
+    'ring3',
+    'big',
+    'logo',
+    'tag',
+  ].reduce((o, k) => ((o[k] = $(k)), o), {});
+
+  window.__D = D;
+  window.__render = (t) => {
+    const ph = (t / D) * Math.PI * 2;
+    els.b1.style.transform = `translate(${Math.sin(ph) * 120}px, ${Math.cos(ph) * 60}px) scale(${1 + Math.sin(ph) * 0.1})`;
+    els.b2.style.transform = `translate(${Math.cos(ph) * -140}px, ${Math.sin(ph) * 80}px)`;
+    els.b3.style.transform = `translate(${Math.sin(ph * 2) * 70}px, ${Math.cos(ph) * -50}px)`;
+
+    // Sahne 1: 0 – 2.6
+    const vis1 = t < 2.7 ? 1 : 0;
+    els.s1.style.opacity = vis1;
+    ['w1', 'w2', 'w3'].forEach((id, i) => {
+      const inn = ease(seg(t, 0.25 + i * 0.22, 0.95 + i * 0.22));
+      const out = easeIO(seg(t, 2.1 + i * 0.08, 2.6 + i * 0.08));
+      els[id].style.transform = `translateY(${(1 - inn) * 110 - out * 110}%)`;
+    });
+
+    // Sahne 2: 2.6 – 5.5
+    const v2 = t >= 2.6 && t < 5.6;
+    els.s2.style.opacity = v2 ? 1 : 0;
+    const t2 = t - 2.6;
+    els.r1.style.transform = `translateX(${-t2 * 120}px) rotate(-4deg)`;
+    els.r2.style.transform = `translateX(${-1100 + t2 * 150}px) rotate(-4deg)`;
+    els.s2.style.clipPath = `inset(0 ${(1 - ease(seg(t, 2.6, 3.2))) * 100}% 0 0)`;
+    els.cap.style.opacity = ease(seg(t, 3.3, 3.8)) * (1 - seg(t, 5.2, 5.5));
+    els.cap.style.transform = `translateY(${(1 - ease(seg(t, 3.3, 3.8))) * 30}px)`;
+
+    // Sahne 3: 5.5 – 7.7
+    els.s3.style.opacity = t >= 5.5 && t < 7.8 ? 1 : 0;
+    [
+      ['ring1', 0],
+      ['ring2', 0.25],
+      ['ring3', 0.5],
+    ].forEach(([id, d]) => {
+      const p = seg(t, 5.5 + d, 7.4 + d);
+      els[id].style.transform = `scale(${0.2 + p * 3.2})`;
+      els[id].style.opacity = (1 - p) * 0.9;
+    });
+    const bi = ease(seg(t, 5.7, 6.4)),
+      bo = seg(t, 7.3, 7.7);
+    els.big.style.opacity = bi * (1 - bo);
+    els.big.style.transform = `translateY(${(1 - bi) * 50 - bo * 40}px) scale(${0.94 + bi * 0.06})`;
+
+    // Sahne 4: 7.7 – 9 (başa dönüş için sonda karartma)
+    els.s4.style.opacity = t >= 7.7 ? 1 : 0;
+    const li = ease(seg(t, 7.8, 8.4)),
+      fade = 1 - seg(t, 8.6, 9);
+    els.logo.style.opacity = li * fade;
+    els.logo.style.transform = `scale(${0.8 + li * 0.2})`;
+    els.tag.style.opacity = ease(seg(t, 8.2, 8.6)) * fade;
+  };
+  window.__render(0);
+  // Önizleme için (tarayıcıda açılınca) canlı oynat
+  if (!new URLSearchParams(location.search).has('frame')) {
+    const t0 = performance.now();
+    const loop = () => {
+      window.__render(((performance.now() - t0) / 1000) % D);
+      requestAnimationFrame(loop);
+    };
+    loop();
+  }
+</script>
+
+<style is:global>
+  .reel {
+    position: relative;
+    width: 1280px;
+    height: 720px;
+    overflow: hidden;
+    background: #0a0f2c;
+    color: #f3f5ff;
+    font-family: var(--font-display);
+  }
+  .reel .blob {
+    position: absolute;
+    border-radius: 50%;
+  }
+  .reel .b1 {
+    width: 900px;
+    height: 900px;
+    left: -260px;
+    top: -380px;
+    background: radial-gradient(circle, rgba(108, 92, 255, 0.7), transparent 62%);
+  }
+  .reel .b2 {
+    width: 820px;
+    height: 820px;
+    right: -300px;
+    bottom: -380px;
+    background: radial-gradient(circle, rgba(47, 107, 255, 0.6), transparent 62%);
+  }
+  .reel .b3 {
+    width: 520px;
+    height: 520px;
+    left: 40%;
+    top: 20%;
+    background: radial-gradient(circle, rgba(255, 184, 77, 0.22), transparent 62%);
+  }
+  .reel .gridl {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(160, 175, 255, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(160, 175, 255, 0.1) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, #000 20%, transparent 80%);
+  }
+  .reel .s {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    opacity: 0;
+  }
+  .reel .s1 {
+    justify-items: start;
+    padding-left: 110px;
+  }
+  .reel .w {
+    overflow: hidden;
+    font-size: 148px;
+    line-height: 1.02;
+    letter-spacing: -0.045em;
+    font-weight: 800;
+    padding-bottom: 14px;
+    margin: 0;
+  }
+  .reel .w span {
+    display: inline-block;
+    will-change: transform;
+  }
+  .reel .w.g span {
+    background: linear-gradient(100deg, #9a8fff, #6ea0ff 50%, #ffb84d);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .reel .s2 {
+    overflow: hidden;
+  }
+  .reel .row {
+    position: absolute;
+    left: 0;
+    display: flex;
+    gap: 32px;
+    width: max-content;
+  }
+  .reel .r1 {
+    top: 40px;
+  }
+  .reel .r2 {
+    top: 430px;
+  }
+  .reel .r1 .card {
+    width: 300px;
+  }
+  .reel .r2 .card {
+    width: 440px;
+  }
+  .reel .card {
+    border-radius: 22px;
+    overflow: hidden;
+    box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    flex: none;
+  }
+  .reel .cap {
+    position: absolute;
+    left: 50%;
+    translate: -50% 0;
+    top: 304px;
+    white-space: nowrap;
+    text-align: center;
+    font-size: 50px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    padding: 16px 44px;
+    border-radius: 99px;
+    background: rgba(10, 15, 44, 0.86);
+    border: 1px solid rgba(180, 190, 255, 0.35);
+    z-index: 3;
+    margin: 0;
+  }
+  .reel .ring {
+    position: absolute;
+    width: 520px;
+    height: 520px;
+    border-radius: 50%;
+    border: 3px solid #9a8fff;
+    left: calc(50% - 260px);
+    top: calc(50% - 260px);
+  }
+  .reel .big {
+    text-align: center;
+    font-size: 120px;
+    line-height: 1.02;
+    letter-spacing: -0.045em;
+    font-weight: 800;
+    margin: 0;
+    position: relative;
+  }
+  .reel .big .num {
+    font-size: 230px;
+    background: linear-gradient(120deg, #fff, #9a8fff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .reel .big em {
+    font-style: normal;
+    color: #ffb84d;
+  }
+  .reel .logo {
+    display: flex;
+    align-items: center;
+    gap: 26px;
+    font-size: 130px;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+  }
+  .reel .tag {
+    position: absolute;
+    bottom: 150px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-family: var(--font-body);
+    font-size: 34px;
+    font-weight: 700;
+    color: #ffb84d;
+    margin: 0;
+  }
+</style>

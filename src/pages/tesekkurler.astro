@@ -1,0 +1,103 @@
+---
+import Base from '@layouts/Base.astro';
+import Icon from '@components/Icon.astro';
+import { href, waLink, waIsLive } from '@lib/url';
+import { contact } from '@content/site';
+---
+
+<Base
+  title="Teşekkürler — talebiniz alındı"
+  description="Mini analiz talebiniz bize ulaştı."
+  path="/tesekkurler/"
+  og="home"
+  noindex
+>
+  <section class="page-hero ty">
+    <div class="container">
+      <div class="ty__badge" aria-hidden="true">
+        <Icon name="check" size={44} />
+      </div>
+      <h1>Talebiniz bize ulaştı. Teşekkürler!</h1>
+      <p class="lead">
+        Hesabınızı/sitenizi inceleyip <strong>2 iş günü içinde</strong> e-postanıza yazılı mini
+        analizinizi göndereceğiz. Beklerken çalışmalarımıza göz atabilirsiniz.
+      </p>
+      <div class="actions">
+        <a class="btn btn--primary" href={href('/calismalar/')} data-magnetic>
+          Çalışmalarımızı görün <Icon name="arrow" class="arrow" />
+        </a>
+        {waIsLive() ? (
+          <a
+            class="btn btn--wa"
+            href={waLink()}
+            target="_blank"
+            rel="noopener"
+            data-track="whatsapp_click"
+            data-track-where="thanks"
+          >
+            <Icon name="whatsapp" size={20} /> Acil sorunuz mu var?
+          </a>
+        ) : (
+          <a class="btn btn--ghost" href={`mailto:${contact.email}`} data-track="email_click">
+            <Icon name="mail" size={20} /> Acil sorunuz mu var?
+          </a>
+        )}
+        <a class="btn btn--ghost" href={href('/')}>
+          Ana sayfa
+        </a>
+      </div>
+    </div>
+  </section>
+  <script>
+    // Dönüşüm olayı (analitik onayı varsa) — form gönderiminden sonra bir kez.
+    import { track } from '../scripts/analytics';
+    try {
+      if (sessionStorage.getItem('vt_lead') === '1') {
+        track('lead_thankyou');
+        sessionStorage.removeItem('vt_lead');
+      }
+    } catch {
+      /* yok say */
+    }
+  </script>
+</Base>
+<style>
+  .ty {
+    min-height: 80vh;
+    display: grid;
+    align-content: center;
+    text-align: center;
+  }
+  .ty h1 {
+    margin-inline: auto;
+    max-width: 20ch;
+  }
+  .ty .lead {
+    margin-inline: auto;
+  }
+  .ty__badge {
+    width: 96px;
+    height: 96px;
+    margin: 0 auto var(--sp-5);
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: linear-gradient(120deg, var(--btn-from), var(--btn-to));
+    color: #fff;
+    box-shadow: 0 20px 50px -12px var(--glow-a);
+    animation: pop 0.7s var(--ease-out);
+  }
+  @keyframes pop {
+    from {
+      transform: scale(0.4);
+      opacity: 0;
+    }
+  }
+  .actions {
+    margin-top: var(--sp-6);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-3);
+    justify-content: center;
+  }
+</style>

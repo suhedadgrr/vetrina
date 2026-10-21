@@ -1,0 +1,113 @@
+---
+import { showreel } from '@content/site';
+import { href } from '@lib/url';
+import Icon from './Icon.astro';
+---
+
+<section class="section showreel" id="showreel" aria-labelledby="showreel-title">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow reveal">Motion showreel</p>
+      <h2 id="showreel-title" class="reveal" style="--i:1">
+        {showreel.title}
+      </h2>
+      <p class="reveal" style="--i:2">
+        {showreel.text}
+      </p>
+    </header>
+
+    <figure class="reel glass reveal" data-reel>
+      <div class="reel__frame" data-parallax-scale>
+        <video
+          class="reel__video"
+          muted
+          loop
+          playsinline
+          preload="none"
+          poster={href(showreel.poster)}
+          aria-label="Vetrina konsept motion showreel (sessiz)"
+          data-reel-video
+          data-webm={href(showreel.video.webm)}
+          data-mp4={href(showreel.video.mp4)}
+        ></video>
+        <button class="reel__play" type="button" data-reel-play aria-label="Showreel'i oynat">
+          <Icon name="motion" size={30} />
+          <span>Oynat</span>
+        </button>
+      </div>
+      <figcaption>{showreel.label} · Ses yok · Otomatik oynar</figcaption>
+    </figure>
+
+    <p class="reel__cta reveal">
+      <a
+        class="btn btn--primary"
+        href={href('/#iletisim')}
+        data-magnetic
+        data-track="cta_click"
+        data-track-where="showreel"
+        data-prefill="Motion grafik / Reel"
+      >
+        Reel fikri isteyin <Icon name="arrow" class="arrow" />
+      </a>
+    </p>
+  </div>
+</section>
+
+<style>
+  .reel {
+    margin: 0;
+    padding: clamp(0.5rem, 1.2vw, 0.9rem);
+  }
+  .reel__frame {
+    position: relative;
+    border-radius: calc(var(--r-lg) - 6px);
+    overflow: hidden;
+    aspect-ratio: 16 / 9;
+    background: var(--bg-deep);
+  }
+  .reel__video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .reel__play {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    align-content: center;
+    gap: 2px;
+    background: rgba(8, 12, 36, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    color: #fff;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    font-size: 0.72rem;
+    font-weight: 700;
+    transition:
+      transform var(--dur-2) var(--ease-out),
+      opacity var(--dur-2);
+  }
+  .reel__play:hover {
+    transform: scale(1.1);
+  }
+  .reel.is-playing .reel__play {
+    opacity: 0;
+    pointer-events: none;
+  }
+  figcaption {
+    padding: var(--sp-3) var(--sp-2) var(--sp-1);
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+  }
+  .reel__cta {
+    margin-top: var(--sp-6);
+    text-align: center;
+  }
+</style>

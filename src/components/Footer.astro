@@ -1,0 +1,279 @@
+---
+import { site, contact, social, nav, isPlaceholder, cta } from '@content/site';
+import { services } from '@content/services';
+import { href, waLink, telLink, waIsLive, telIsLive } from '@lib/url';
+import Icon from './Icon.astro';
+import Logo from './Logo.astro';
+const year = new Date().getFullYear();
+const socials = [
+  { key: 'instagram', label: 'Instagram', icon: 'social', ...social.instagram },
+  { key: 'linkedin', label: 'LinkedIn', icon: 'linkedin', ...social.linkedin },
+  { key: 'youtube', label: 'YouTube', icon: 'youtube', ...social.youtube },
+  { key: 'behance', label: 'Behance', icon: 'behance', ...social.behance },
+];
+---
+
+<footer class="ftr">
+  <div class="container">
+    <div class="ftr__cta glass">
+      <div>
+        <h2>Vitrininiz hazır mı?</h2>
+        <p>
+          Instagram hesabınızı veya sitenizi inceleyip size yazılı, ücretsiz bir mini analiz
+          hazırlayalım.
+        </p>
+      </div>
+      <a
+        class="btn btn--primary"
+        href={href(cta.primaryHref)}
+        data-magnetic
+        data-track="cta_click"
+        data-track-where="footer"
+      >
+        {cta.primary} <Icon name="arrow" class="arrow" />
+      </a>
+    </div>
+
+    <div class="ftr__grid">
+      <div class="ftr__brand">
+        <p class="ftr__logo">
+          <Logo height={44} />
+        </p>
+        <p class="muted">
+          {site.tagline}. Sosyal medya, web, kurumsal kimlik, B2B iletişim ve motion.
+        </p>
+        <ul class="ftr__social" aria-label="Sosyal medya">
+          {socials
+            .filter((s) => !isPlaceholder(s.url))
+            .map((s) => (
+              <li>
+                <a class="soc" href={s.url} rel="noopener me" target="_blank" aria-label={s.label}>
+                  <Icon name={s.icon} size={20} />
+                </a>
+              </li>
+            ))}
+        </ul>
+      </div>
+      <div>
+        <h3>Hizmetler</h3>
+        <ul>
+          {services.map((s) => (
+            <li>
+              <a href={href(`/hizmetler/${s.slug}/`)}>{s.title}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div>
+        <h3>Site</h3>
+        <ul>
+          {nav.map((n) => (
+            <li>
+              <a href={href(n.href)}>{n.label}</a>
+            </li>
+          ))}
+          <li>
+            <a href={href('/calismalar/')}>Tüm çalışmalar</a>
+          </li>
+        </ul>
+      </div>
+      <div>
+        <h3>İletişim</h3>
+        <ul class="contact">
+          <li>
+            <Icon name="mail" size={18} />{' '}
+            <span class:list={[isPlaceholder(contact.email) && 'placeholder-mark']}>
+              {isPlaceholder(contact.email) ? (
+                contact.email
+              ) : (
+                <a href={`mailto:${contact.email}`} data-track="email_click">
+                  {contact.email}
+                </a>
+              )}
+            </span>
+          </li>
+          {telIsLive() && (
+            <li>
+              <Icon name="phone" size={18} />
+              <a href={telLink()} data-track="phone_click">
+                {contact.phone}
+              </a>
+            </li>
+          )}
+          {waIsLive() && (
+            <li>
+              <Icon name="whatsapp" size={18} />
+              <a
+                href={waLink()}
+                target="_blank"
+                rel="noopener"
+                data-track="whatsapp_click"
+                data-track-where="footer"
+              >
+                WhatsApp
+              </a>
+            </li>
+          )}
+          {!isPlaceholder(contact.address) && <li class="muted">{contact.address}</li>}
+          {!isPlaceholder(contact.hours) && <li class="muted">{contact.hours}</li>}
+        </ul>
+      </div>
+    </div>
+
+    <div class="ftr__legal">
+      <p>
+        © {year} {site.legalName}. Tüm hakları saklıdır.
+      </p>
+      <ul>
+        <li>
+          <a href={href('/kvkk/')}>KVKK Aydınlatma</a>
+        </li>
+        <li>
+          <a href={href('/gizlilik/')}>Gizlilik Politikası</a>
+        </li>
+        <li>
+          <a href={href('/cerez-politikasi/')}>Çerez Politikası</a>
+        </li>
+        <li>
+          <button type="button" class="linklike" data-open-cookie>
+            Çerez tercihleri
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .ftr {
+    padding: var(--section-y) 0 calc(var(--sp-7) + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--line);
+    background: linear-gradient(180deg, transparent, var(--bg-deep));
+  }
+  .ftr__cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-5);
+    flex-wrap: wrap;
+    padding: clamp(1.5rem, 4vw, 3rem);
+    margin-bottom: var(--sp-8);
+  }
+  .ftr__cta h2 {
+    font-size: var(--fs-2xl);
+    margin-bottom: var(--sp-2);
+  }
+  .ftr__cta p {
+    color: var(--text-muted);
+    max-width: 34rem;
+  }
+  .ftr__grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1.3fr;
+    gap: var(--sp-6);
+  }
+  .ftr h3 {
+    font-family: var(--font-body);
+    font-size: var(--fs-xs);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: var(--sp-4);
+  }
+  .ftr ul {
+    display: grid;
+    gap: 0.5rem;
+  }
+  .ftr li a:hover {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .ftr__logo {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: var(--sp-3);
+  }
+  .muted {
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+  }
+  .ftr__social {
+    display: flex !important;
+    gap: var(--sp-2) !important;
+    margin-top: var(--sp-4);
+  }
+  .soc {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--glass-border);
+    background: var(--glass);
+    transition:
+      border-color var(--dur-1),
+      transform var(--dur-2) var(--ease-out);
+  }
+  a.soc:hover {
+    border-color: var(--accent);
+    transform: translateY(-3px);
+  }
+  .soc.is-off {
+    opacity: 0.45;
+  }
+  .contact li {
+    display: flex;
+    gap: 0.6rem;
+    align-items: flex-start;
+    font-size: var(--fs-sm);
+  }
+  .contact :global(svg) {
+    margin-top: 0.2rem;
+    color: var(--accent);
+    flex: none;
+  }
+  .ftr__legal {
+    margin-top: var(--sp-8);
+    padding-top: var(--sp-5);
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    gap: var(--sp-4);
+    flex-wrap: wrap;
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+  }
+  .ftr__legal ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2) var(--sp-5);
+  }
+  .linklike {
+    background: none;
+    border: 0;
+    padding: 0;
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    font-size: inherit;
+  }
+  @media (max-width: 900px) {
+    .ftr__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .ftr__brand {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (max-width: 560px) {
+    .ftr__grid {
+      grid-template-columns: 1fr;
+    }
+    .ftr {
+      padding-bottom: 7rem;
+    }
+  }
+</style>

@@ -1,0 +1,381 @@
+---
+import Base from '@layouts/Base.astro';
+import Icon from '@components/Icon.astro';
+import { href, abs } from '@lib/url';
+const sitekey = import.meta.env.PUBLIC_TURNSTILE_SITEKEY ?? '';
+const key = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? '';
+const pdf = href('/downloads/vetrina-b2b-ornek-sunum.pdf');
+const ld = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Ana sayfa', item: abs('/', Astro.site) },
+      { '@type': 'ListItem', position: 2, name: 'B2B', item: abs('/b2b/', Astro.site) },
+    ],
+  },
+];
+---
+
+<Base
+  title="B2B Marka İletişimi — örnek sunum ve katalog"
+  description="B2B firmalar için sunum, katalog ve kurumsal profil tasarımı. Örnek sunum PDF’ini e-posta adresinizle indirin."
+  path="/b2b/"
+  og="b2b"
+  jsonLd={ld}
+>
+  <section class="page-hero">
+    <div class="container head">
+      <div>
+        <nav class="breadcrumb" aria-label="Sayfa yolu">
+          <a href={href('/')}>Ana sayfa</a> / <span aria-current="page">B2B</span>
+        </nav>
+        <p class="eyebrow">B2B marka iletişimi</p>
+        <h1>Teklif masasında sizi öne çıkaran dokümanlar.</h1>
+        <p class="lead">
+          Sunum, katalog ve kurumsal profil: satış ekibinizin eline güven veren bir set.
+          Yaklaşımımızı görmek için örnek sunumu indirin.
+        </p>
+        <ul class="pts">
+          <li>
+            <Icon name="check" size={18} /> Slayt başına tek mesaj ilkesi
+          </li>
+          <li>
+            <Icon name="check" size={18} /> Düzenlenebilir şablon + baskıya hazır PDF
+          </li>
+          <li>
+            <Icon name="check" size={18} /> Marka rehberine bağlı, tutarlı sayfa sistemi
+          </li>
+        </ul>
+      </div>
+
+      <div class="gate glass" id="indir">
+        <h2>Örnek sunumu indirin</h2>
+        <p class="sub">
+          Kurgusal bir marka için hazırlanmış kısa örnek (PDF). E-postanızı yazın, indirme
+          bağlantısı anında açılsın.
+        </p>
+        <form
+          class="form"
+          novalidate
+          data-form
+          data-subject="B2B örnek sunum indirme — Vetrina"
+          data-event="pdf_request"
+          data-reveal-download
+          data-key={key}
+          data-sitekey={sitekey}
+        >
+          <div class="field">
+            <label for="b-mail">
+              İş e-postanız <span aria-hidden="true">*</span>
+            </label>
+            <input
+              id="b-mail"
+              name="email"
+              type="email"
+              required
+              autocomplete="email"
+              inputmode="email"
+              placeholder="ad@firma.com"
+            />
+            <p class="field__err" data-err="b-mail" role="alert"></p>
+          </div>
+          <div class="field">
+            <label for="b-firma">Firma</label>
+            <input
+              id="b-firma"
+              name="company"
+              type="text"
+              autocomplete="organization"
+              placeholder="Firma adı"
+            />
+          </div>
+          <div class="hp" aria-hidden="true">
+            <label>
+              Boş bırakın{' '}
+              <input type="text" name="company_website" tabindex="-1" autocomplete="off" />
+            </label>
+            <input type="checkbox" name="botcheck" tabindex="-1" />
+          </div>
+          <input type="hidden" name="subject" value="B2B örnek sunum indirme — Vetrina" />
+          <input type="hidden" name="from_name" value="Vetrina Web Sitesi" />
+          <input type="hidden" name="utm" value="" data-utm />
+          <input type="hidden" name="page" value="" data-page />
+          <div class="field field--check">
+            <input id="b-kvkk" name="kvkk" type="checkbox" required />
+            <label for="b-kvkk">
+              <a href={href('/kvkk/')} target="_blank" rel="noopener">
+                KVKK Aydınlatma Metni
+              </a>
+              ’ni okudum; e-postamın bu amaçla işlenmesini kabul ediyorum.{' '}
+              <span aria-hidden="true">*</span>
+            </label>
+            <p class="field__err" data-err="b-kvkk" role="alert"></p>
+          </div>
+          <div class="turnstile" data-turnstile></div>
+          <button class="btn btn--primary form__submit" type="submit" data-submit>
+            <span class="form__label">PDF’i aç</span>
+            <span class="form__spin" aria-hidden="true"></span>
+            <Icon name="download" size={20} />
+          </button>
+          <div class="form__status" role="status" aria-live="polite" data-status></div>
+        </form>
+        <div class="dl" data-download hidden>
+          <p class="ok">
+            <Icon name="check" size={20} /> Teşekkürler! Örnek sunum hazır.
+          </p>
+          <a
+            class="btn btn--primary"
+            href={pdf}
+            download
+            data-track="pdf_download"
+            data-track-where="b2b-sample"
+          >
+            <Icon name="download" size={20} /> Örnek sunumu indir (PDF)
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section--tight">
+    <div class="container what">
+      <h2 class="h2">B2B paketinde neler var?</h2>
+      <ul class="cards">
+        {[
+          [
+            'Kurumsal sunum',
+            'Satış toplantılarında ilk 3 slaytta “ne yapıyoruz, neden biz” sorusunu cevaplayan düzen.',
+          ],
+          ['Ürün/Hizmet kataloğu', 'Modüler sayfa sistemi; yeni ürün eklemek dakikalar sürer.'],
+          ['Kurumsal profil', 'İhale ve bayi başvuruları için referans, sertifika ve süreç özeti.'],
+          ['Fuar & toplantı materyali', 'Roll-up, broşür ve QR’lı iletişim kartları.'],
+        ].map(([t, d]) => (
+          <li class="glass reveal">
+            <h3>{t}</h3>
+            <p>{d}</p>
+          </li>
+        ))}
+      </ul>
+      <p class="cta">
+        <a
+          class="btn btn--primary"
+          href={href('/#iletisim')}
+          data-track="cta_click"
+          data-track-where="b2b-bottom"
+          data-prefill="B2B Marka İletişimi"
+        >
+          Ücretsiz Mini Analiz İste <Icon name="arrow" class="arrow" />
+        </a>
+      </p>
+    </div>
+  </section>
+</Base>
+<style>
+  .head {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: start;
+  }
+  .pts {
+    margin-top: var(--sp-5);
+    display: grid;
+    gap: 0.6rem;
+  }
+  .pts li {
+    display: flex;
+    gap: 0.6rem;
+    color: var(--text-muted);
+  }
+  .pts :global(svg) {
+    color: var(--c-mint);
+    margin-top: 0.2rem;
+    flex: none;
+  }
+  :global([data-theme='light']) .pts :global(svg) {
+    color: #0a8a5b;
+  }
+  .gate {
+    padding: clamp(1.3rem, 3vw, 2.2rem);
+    background: var(--glass-strong);
+    display: grid;
+    gap: var(--sp-4);
+  }
+  .gate h2 {
+    font-size: var(--fs-xl);
+  }
+  .sub {
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+  }
+  .form {
+    display: grid;
+    gap: var(--sp-3);
+  }
+  .field {
+    display: grid;
+    gap: 0.4rem;
+  }
+  label {
+    font-size: var(--fs-sm);
+    font-weight: 600;
+  }
+  label span {
+    color: var(--warm);
+  }
+  input[type='text'],
+  input[type='email'] {
+    width: 100%;
+    min-height: 50px;
+    padding: 0.75rem 1rem;
+    border-radius: var(--r-sm);
+    border: 1px solid var(--glass-border);
+    background: color-mix(in srgb, var(--bg-deep) 60%, transparent);
+    color: var(--text);
+    font-size: 1rem;
+  }
+  input:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 35%, transparent);
+  }
+  .field.has-err input {
+    border-color: #ff6b81;
+  }
+  .field__err {
+    color: #ff8da0;
+    font-size: var(--fs-xs);
+    font-weight: 600;
+  }
+  .field__err:empty {
+    display: none;
+  }
+  :global([data-theme='light']) .field__err {
+    color: #c0213d;
+  }
+  .field--check {
+    grid-template-columns: auto 1fr;
+    column-gap: 0.7rem;
+  }
+  .field--check input {
+    width: 22px;
+    height: 22px;
+    accent-color: var(--c-violet);
+    margin-top: 0.1rem;
+  }
+  .field--check label {
+    font-weight: 400;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+  .field--check label a {
+    color: var(--accent);
+    text-decoration: underline;
+  }
+  .field--check .field__err {
+    grid-column: 1 / -1;
+  }
+  .hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+  .form__submit {
+    width: 100%;
+  }
+  .form__spin {
+    display: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 3px solid rgba(255, 255, 255, 0.35);
+    border-top-color: #fff;
+    animation: spin 0.8s linear infinite;
+  }
+  .form.is-busy .form__spin {
+    display: inline-block;
+  }
+  .form.is-busy .form__submit {
+    opacity: 0.85;
+    pointer-events: none;
+  }
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  .form__status:empty {
+    display: none;
+  }
+  .form__status {
+    padding: 0.9rem 1.1rem;
+    border-radius: var(--r-sm);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    border: 1px solid;
+  }
+  .form__status.is-error {
+    color: #ffb3c0;
+    border-color: #ff6b81;
+    background: rgba(255, 107, 129, 0.12);
+  }
+  :global([data-theme='light']) .form__status.is-error {
+    color: #9c1630;
+  }
+  .dl {
+    display: grid;
+    gap: var(--sp-3);
+  }
+  .dl[hidden] {
+    display: none;
+  }
+  .ok {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    font-weight: 700;
+    color: var(--c-mint);
+  }
+  :global([data-theme='light']) .ok {
+    color: #0a6b47;
+  }
+  .h2 {
+    font-size: var(--fs-2xl);
+    margin-bottom: var(--sp-5);
+  }
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--sp-4);
+  }
+  .cards li {
+    padding: clamp(1.2rem, 3vw, 1.8rem);
+  }
+  .cards h3 {
+    font-size: var(--fs-lg);
+    margin-bottom: 0.5rem;
+  }
+  .cards p {
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+  }
+  .cta {
+    margin-top: var(--sp-6);
+  }
+  @media (max-width: 960px) {
+    .head {
+      grid-template-columns: 1fr;
+    }
+    .cards {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (max-width: 560px) {
+    .cards {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

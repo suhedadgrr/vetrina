@@ -1,0 +1,155 @@
+---
+import '../styles/global.css';
+import Header from '@components/Header.astro';
+import Footer from '@components/Footer.astro';
+import FloatingCTA from '@components/FloatingCTA.astro';
+import CookieBanner from '@components/CookieBanner.astro';
+import { site, contact, social, isPlaceholder } from '@content/site';
+import { abs, href } from '@lib/url';
+import bricolage from '../assets/fonts/bricolage-latin.woff2?url';
+import bricolageTr from '../assets/fonts/bricolage-tr.woff2?url';
+import inter from '../assets/fonts/inter-latin.woff2?url';
+import interTr from '../assets/fonts/inter-tr.woff2?url';
+
+interface Props {
+  title: string;
+  description?: string;
+  /** Sayfa yolu, örn. '/b2b/' */
+  path?: string;
+  /** public/og altındaki dosya adı (uzantısız). Varsayılan: home */
+  og?: string;
+  noindex?: boolean;
+  jsonLd?: Record<string, unknown>[];
+  hideChrome?: boolean;
+  bodyClass?: string;
+}
+const {
+  title,
+  description = site.description,
+  path = '/',
+  og = 'home',
+  noindex = false,
+  jsonLd = [],
+  hideChrome = false,
+  bodyClass = '',
+} = Astro.props;
+
+const fullTitle = path === '/' ? title : `${title} | ${site.name}`;
+const canonical = abs(path, Astro.site);
+const ogImage = abs(`/og/${og}.jpg`, Astro.site);
+
+const sameAs = Object.values(social)
+  .map((s) => s.url)
+  .filter((u) => !isPlaceholder(u));
+const org: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  '@id': abs('/#org', Astro.site),
+  name: site.name,
+  url: abs('/', Astro.site),
+  description: site.description,
+  logo: abs('/brand/app-icon.png', Astro.site),
+  image: abs('/og/home.jpg', Astro.site),
+  areaServed: 'TR',
+  knowsLanguage: 'tr',
+  serviceType: [
+    'Sosyal medya yönetimi',
+    'Web sitesi tasarımı',
+    'Kurumsal kimlik',
+    'B2B marka iletişimi',
+    'Motion grafik',
+  ],
+  ...(sameAs.length ? { sameAs } : {}),
+  ...(!isPlaceholder(contact.email) ? { email: contact.email } : {}),
+  ...(!isPlaceholder(contact.phone) ? { telephone: contact.phone } : {}),
+};
+const blocks = [org, ...jsonLd];
+
+const plausibleDomain = import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN ?? '';
+const plausibleSrc =
+  import.meta.env.PUBLIC_PLAUSIBLE_SRC ?? 'https://plausible.io/js/script.tagged-events.js';
+---
+
+<!doctype html>
+<html lang={site.defaultLang} data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex ? (
+      <meta name="robots" content="noindex,nofollow" />
+    ) : (
+      <meta name="robots" content="index,follow,max-image-preview:large" />
+    )}
+    <meta name="theme-color" content="#0a0f2c" />
+    <meta name="color-scheme" content="dark light" />
+    <link rel="icon" href={href('/favicon.svg')} type="image/svg+xml" />
+    <link rel="apple-touch-icon" href={href('/apple-touch-icon.png')} />
+    <link rel="alternate" hreflang="tr" href={canonical} />
+    <link rel="alternate" hreflang="x-default" href={canonical} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content="tr_TR" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${site.name} — ${title}`} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <link rel="preload" href={bricolage} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={inter} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={bricolageTr} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={interTr} as="font" type="font/woff2" crossorigin />
+
+    <!-- Tema: sayfa çizilmeden önce uygula (yanıp sönmeyi önler) -->
+    <script is:inline>
+      (function () {
+        const d = document.documentElement;
+        d.classList.add('js');
+        let t = null;
+        try {
+          t = localStorage.getItem('vt_theme');
+        } catch {
+          /* depolama kapalı */
+        }
+        if (t !== 'light' && t !== 'dark') t = 'dark'; /* varsayılan: koyu (sinematik) */
+        d.setAttribute('data-theme', t);
+        const m = document.querySelector('meta[name=theme-color]');
+        if (m) m.setAttribute('content', t === 'light' ? '#f6f7fd' : '#0a0f2c');
+      })();
+    </script>
+    {blocks.map((b) => (
+      <script type="application/ld+json" set:html={JSON.stringify(b)} />
+    ))}
+  </head>
+  <body class={bodyClass} data-plausible-domain={plausibleDomain} data-plausible-src={plausibleSrc}>
+    <a class="skip-link" href="#icerik">
+      Ana içeriğe geç
+    </a>
+    {!hideChrome && <Header />}
+    <main id="icerik" tabindex="-1">
+      <slot />
+    </main>
+    {!hideChrome && <Footer />}
+    {!hideChrome && <FloatingCTA />}
+    {!hideChrome && <CookieBanner />}
+    {!hideChrome && (
+      <div class="cursor" aria-hidden="true">
+        <span class="cursor__ring"></span>
+        <span class="cursor__dot"></span>
+      </div>
+    )}
+    <script>
+      import '../scripts/main';
+    </script>
+  </body>
+</html>

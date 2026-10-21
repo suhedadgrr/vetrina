@@ -1,0 +1,119 @@
+---
+import Base from '@layouts/Base.astro';
+import ConceptArt from '@components/ConceptArt.astro';
+import BeforeAfter from '@components/BeforeAfter.astro';
+import Icon from '@components/Icon.astro';
+import ContentWorks from '@components/ContentWorks.astro';
+import { works } from '@content/work';
+import { href, abs } from '@lib/url';
+const ld = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Ana sayfa', item: abs('/', Astro.site) },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Çalışmalar',
+        item: abs('/calismalar/', Astro.site),
+      },
+    ],
+  },
+];
+---
+
+<Base
+  title="Çalışmalar — vaka ve konsept projeler"
+  description="Vetrina’nın çalışmaları: bir diş kliniği için kurulan gerçek dijital altyapı (müşteri izniyle) ve kurumsal kimlik, sosyal medya, B2B sunum, motion alanında konsept çalışmalar."
+  path="/calismalar/"
+  og="calismalar"
+  jsonLd={ld}
+>
+  <section class="page-hero">
+    <div class="container">
+      <nav class="breadcrumb" aria-label="Sayfa yolu">
+        <a href={href('/')}>Ana sayfa</a> / <span aria-current="page">Çalışmalar</span>
+      </nav>
+      <p class="eyebrow">Portföy</p>
+      <h1>Çalışmalarımız</h1>
+      <p class="lead">
+        İlk gerçek işimiz bir diş kliniğinin dijital altyapısı (müşterinin izniyle). Yanında,
+        yaklaşımımızı gösteren <strong>kurgusal konsept çalışmalar</strong> yer alıyor. Gerçek işler
+        eklendikçe burada yayınlanacak.
+      </p>
+    </div>
+  </section>
+  <section class="section--tight">
+    <div class="container">
+      <ul class="grid">
+        {works.map((w, i) => (
+          <li class="reveal" style={`--i:${i}`}>
+            <a class="work-card glass" href={href(`/calismalar/${w.slug}/`)} data-tilt>
+              <ConceptArt work={w} ratio="4 / 3" animated={false} />
+              <div class="meta">
+                <div>
+                  <h2>{w.brand}</h2>
+                  <p>{w.category}</p>
+                </div>
+                <Icon name="arrow" size={20} />
+              </div>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <div class="ba reveal">
+        <h2>Önce / Sonra</h2>
+        <BeforeAfter />
+      </div>
+    </div>
+  </section>
+  <ContentWorks />
+</Base>
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--sp-5);
+  }
+  .work-card {
+    display: grid;
+    gap: var(--sp-3);
+    padding: var(--sp-3);
+    transition:
+      transform 0.35s var(--ease-out),
+      border-color var(--dur-2);
+    transform: perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  }
+  .work-card :global(.art) {
+    border-radius: calc(var(--r-lg) - 6px);
+  }
+  .work-card:hover {
+    border-color: var(--accent);
+  }
+  .meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 var(--sp-3) var(--sp-3);
+  }
+  .meta h2 {
+    font-size: var(--fs-xl);
+  }
+  .meta p {
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+  }
+  .ba {
+    margin-top: clamp(3rem, 7vw, 6rem);
+  }
+  .ba h2 {
+    font-size: var(--fs-2xl);
+    margin-bottom: var(--sp-5);
+  }
+  @media (max-width: 720px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,124 @@
+---
+import { href } from '@lib/url';
+---
+
+<div
+  class="ck glass"
+  role="dialog"
+  aria-modal="false"
+  aria-labelledby="ck-title"
+  data-cookie
+  hidden
+>
+  <h2 id="ck-title">Çerez tercihleriniz</h2>
+  <p>
+    Siteyi çalıştıran zorunlu çerezler her zaman açıktır. İsteğe bağlı olarak, siteyi geliştirmemize
+    yardımcı olan
+    <strong>gizlilik dostu analitik</strong> ölçümüne izin verebilirsiniz.
+    <span class="ck__more">
+      Ayrıntılar:
+      <a href={href('/cerez-politikasi/')}>Çerez Politikası</a> ve{' '}
+      <a href={href('/kvkk/')}>KVKK Aydınlatma Metni</a>.
+    </span>
+  </p>
+  <div class="ck__opts" data-cookie-opts hidden>
+    <label class="ck__row">
+      <input type="checkbox" checked disabled />{' '}
+      <span>
+        <strong>Zorunlu</strong> — tema tercihi, form güvenliği (Turnstile). Kapatılamaz.
+      </span>
+    </label>
+    <label class="ck__row">
+      <input type="checkbox" data-cookie-analytics />{' '}
+      <span>
+        <strong>Analitik</strong> — ziyaret ve dönüşüm ölçümü (Plausible).
+      </span>
+    </label>
+  </div>
+  <div class="ck__actions">
+    <button class="btn btn--primary btn--sm" type="button" data-cookie-accept>
+      Kabul et
+    </button>
+    <button class="btn btn--ghost btn--sm" type="button" data-cookie-reject>
+      Yalnızca zorunlu
+    </button>
+    <button class="btn btn--ghost btn--sm" type="button" data-cookie-toggle aria-expanded="false">
+      Tercihler
+    </button>
+    <button class="btn btn--ghost btn--sm" type="button" data-cookie-save hidden>
+      Kaydet
+    </button>
+  </div>
+</div>
+
+<style>
+  .ck {
+    position: fixed;
+    left: clamp(0.75rem, 2vw, 1.5rem);
+    bottom: clamp(0.75rem, 2vw, 1.5rem);
+    z-index: calc(var(--z-float) + 5);
+    max-width: 27rem;
+    padding: 1.25rem;
+    background: var(--glass-strong);
+    display: grid;
+    gap: var(--sp-3);
+  }
+  .ck[hidden] {
+    display: none;
+  }
+  .ck h2 {
+    font-size: var(--fs-lg);
+  }
+  .ck p {
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+  }
+  .ck a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .ck__row {
+    display: flex;
+    gap: 0.6rem;
+    align-items: flex-start;
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+    padding: 0.4rem 0;
+  }
+  .ck__row input {
+    margin-top: 0.3rem;
+    width: 18px;
+    height: 18px;
+    accent-color: var(--c-violet);
+    flex: none;
+  }
+  .ck__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+  }
+  @media (max-width: 720px) {
+    .ck__more {
+      display: none;
+    }
+    .ck {
+      padding: 0.9rem;
+      gap: var(--sp-2);
+    }
+    .ck h2 {
+      font-size: var(--fs-base);
+    }
+    .ck .btn {
+      min-height: 40px;
+      padding: 0.4rem 0.9rem;
+      font-size: var(--fs-xs);
+    }
+    .ck {
+      left: 0.5rem;
+      right: 0.5rem;
+      bottom: 5rem;
+      max-width: none;
+    }
+  }
+</style>

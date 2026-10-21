@@ -1,0 +1,321 @@
+---
+import '../styles/global.css';
+import BrandMark from '@components/BrandMark.astro';
+import ConceptArt from '@components/ConceptArt.astro';
+import { works } from '@content/work';
+const w = works[0];
+const total = 5;
+---
+
+<!doctype html>
+<html lang="tr" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>Vetrina — Örnek B2B Sunum (konsept)</title>
+    <style is:global>
+      @page {
+        size: 297mm 210mm;
+        margin: 0;
+      }
+      html,
+      body {
+        background: #0a0f2c;
+      }
+      body::before {
+        display: none;
+      }
+      .pg {
+        position: relative;
+        width: 297mm;
+        height: 210mm;
+        overflow: hidden;
+        page-break-after: always;
+        break-after: page;
+        background: #0a0f2c;
+        color: #f3f5ff;
+        font-family: var(--font-body);
+        padding: 18mm 20mm;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .pg::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(60% 70% at 90% 0%, rgba(108, 92, 255, 0.5), transparent 70%),
+          radial-gradient(50% 60% at 0% 100%, rgba(47, 107, 255, 0.35), transparent 70%);
+      }
+      .pg > * {
+        position: relative;
+      }
+      .hd {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 11pt;
+        color: #b3bae0;
+      }
+      .hd .b {
+        display: flex;
+        align-items: center;
+        gap: 3mm;
+        font-family: var(--font-display);
+        font-weight: 800;
+        font-size: 15pt;
+        color: #f3f5ff;
+      }
+      h1 {
+        font-size: 54pt;
+        line-height: 1;
+        letter-spacing: -0.04em;
+        font-weight: 800;
+        max-width: 14em;
+      }
+      h2 {
+        font-size: 30pt;
+        line-height: 1.05;
+        letter-spacing: -0.03em;
+        font-weight: 800;
+        margin-bottom: 6mm;
+      }
+      .kick {
+        font-size: 11pt;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: #9a8fff;
+        font-weight: 700;
+        margin-bottom: 5mm;
+      }
+      .lead {
+        font-size: 15pt;
+        color: #b3bae0;
+        max-width: 24em;
+        line-height: 1.45;
+      }
+      .cols {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 7mm;
+      }
+      .box {
+        border: 1px solid rgba(180, 190, 255, 0.25);
+        border-radius: 5mm;
+        padding: 7mm;
+        background: rgba(24, 32, 90, 0.45);
+      }
+      .box h3 {
+        font-size: 16pt;
+        margin-bottom: 2mm;
+      }
+      .box p {
+        font-size: 11.5pt;
+        color: #b3bae0;
+        line-height: 1.45;
+      }
+      .num {
+        font-family: var(--font-display);
+        font-weight: 800;
+        font-size: 26pt;
+        color: #ffb84d;
+        margin-bottom: 2mm;
+      }
+      .two {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 12mm;
+        align-items: center;
+        flex: 1;
+      }
+      .art {
+        width: 80mm;
+        justify-self: end;
+        border-radius: 6mm;
+        overflow: hidden;
+        transform: rotate(3deg);
+        box-shadow: 0 10mm 20mm -6mm rgba(0, 0, 0, 0.6);
+      }
+      .ft {
+        display: flex;
+        justify-content: space-between;
+        font-size: 10pt;
+        color: #8f97c4;
+      }
+      .grid4 {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6mm;
+      }
+      .grid4 .box {
+        text-align: left;
+        min-height: 48mm;
+      }
+      .cta {
+        font-size: 24pt;
+        font-weight: 800;
+        color: #ffb84d;
+        font-family: var(--font-display);
+      }
+    </style>
+  </head>
+  <body>
+    <section class="pg">
+      <div class="hd">
+        <span class="b">
+          <BrandMark size={34} /> Vetrina
+        </span>
+        <span>Örnek B2B sunum · konsept</span>
+      </div>
+      <div class="two">
+        <div>
+          <p class="kick">Kurumsal sunum örneği</p>
+          <h1>Üretimin gücünü, güvenen bir dille anlatın.</h1>
+          <p class="lead" style="margin-top:8mm">
+            Atölye Nova (kurgusal marka) için hazırlanmış bu kısa sunum, Vetrina'nın B2B doküman
+            yaklaşımını gösterir.
+          </p>
+        </div>
+        <div class="art">
+          <ConceptArt work={w} ratio="4 / 5" animated={false} />
+        </div>
+      </div>
+      <div class="ft">
+        <span>1 / {total}</span>
+        <span>Kurgusal marka — gerçek müşteri işi değildir</span>
+      </div>
+    </section>
+
+    <section class="pg">
+      <div class="hd">
+        <span class="b">
+          <BrandMark size={34} /> Vetrina
+        </span>
+        <span>İlke 1</span>
+      </div>
+      <div>
+        <p class="kick">Net mesaj</p>
+        <h2>Slayt başına tek mesaj.</h2>
+        <p class="lead" style="margin-bottom:10mm">
+          Karar verici ilk 3 slaytta üç soruya cevap bulmalı: Ne yapıyorsunuz? Kimler için? Neden
+          siz?
+        </p>
+        <div class="cols">
+          <div class="box">
+            <p class="num">01</p>
+            <h3>Ne yapıyoruz?</h3>
+            <p>Tek cümlelik, jargonsuz konumlandırma. Uzun şirket tarihçesi sona kalır.</p>
+          </div>
+          <div class="box">
+            <p class="num">02</p>
+            <h3>Kimler için?</h3>
+            <p>Hedef müşteri tipini ve çözülen problemi açıkça adlandırın.</p>
+          </div>
+          <div class="box">
+            <p class="num">03</p>
+            <h3>Neden biz?</h3>
+            <p>Kanıt gösterin: süreç, sertifika, referans. [Yalnızca doğrulanabilir olanlar.]</p>
+          </div>
+        </div>
+      </div>
+      <div class="ft">
+        <span>2 / {total}</span>
+        <span>vetrina</span>
+      </div>
+    </section>
+
+    <section class="pg">
+      <div class="hd">
+        <span class="b">
+          <BrandMark size={34} /> Vetrina
+        </span>
+        <span>İlke 2</span>
+      </div>
+      <div>
+        <p class="kick">Modüler sistem</p>
+        <h2>Katalog sayfaları tek bir ızgaradan doğar.</h2>
+        <p class="lead" style="margin-bottom:10mm">
+          Yeni ürün eklemek, yeni bir sayfa tasarlamak değil; hazır modülü doldurmaktır.
+        </p>
+        <div class="grid4">
+          <div class="box">
+            <h3>Kapak</h3>
+            <p>Marka, kategori, yıl.</p>
+          </div>
+          <div class="box">
+            <h3>Ürün ailesi</h3>
+            <p>Görsel + 3 teknik özellik.</p>
+          </div>
+          <div class="box">
+            <h3>Teknik tablo</h3>
+            <p>Karşılaştırmalı ölçüler.</p>
+          </div>
+          <div class="box">
+            <h3>İletişim</h3>
+            <p>Bayi ve teklif yönlendirmesi.</p>
+          </div>
+        </div>
+      </div>
+      <div class="ft">
+        <span>3 / {total}</span>
+        <span>vetrina</span>
+      </div>
+    </section>
+
+    <section class="pg">
+      <div class="hd">
+        <span class="b">
+          <BrandMark size={34} /> Vetrina
+        </span>
+        <span>İlke 3</span>
+      </div>
+      <div>
+        <p class="kick">Tutarlılık</p>
+        <h2>Her temas noktasında aynı marka.</h2>
+        <p class="lead" style="margin-bottom:10mm">
+          Sunum, katalog, sosyal medya ve web sitesi aynı renk, tipografi ve dilde buluşur.
+        </p>
+        <div class="cols">
+          <div class="box">
+            <h3>Renk</h3>
+            <p>Ana renk, vurgu rengi ve kullanım oranları marka rehberinde sabitlenir.</p>
+          </div>
+          <div class="box">
+            <h3>Tipografi</h3>
+            <p>Bir başlık, bir metin fontu; hiyerarşi net.</p>
+          </div>
+          <div class="box">
+            <h3>Görsel dil</h3>
+            <p>Desen, ikon ve fotoğraf yönergesi tek kaynaktan.</p>
+          </div>
+        </div>
+      </div>
+      <div class="ft">
+        <span>4 / {total}</span>
+        <span>vetrina</span>
+      </div>
+    </section>
+
+    <section class="pg">
+      <div class="hd">
+        <span class="b">
+          <BrandMark size={34} /> Vetrina
+        </span>
+        <span>Sıradaki adım</span>
+      </div>
+      <div>
+        <p class="kick">Ücretsiz mini analiz</p>
+        <h1>Dokümanlarınızı birlikte gözden geçirelim.</h1>
+        <p class="lead" style="margin-top:8mm">
+          Mevcut sunum/katalogunuzu ya da sosyal/web varlığınızı inceleyip 2 iş günü içinde yazılı
+          bir mini analiz gönderelim.
+        </p>
+      </div>
+      <div class="ft">
+        <span class="cta">[alanadiniz.com] · [merhaba@alanadiniz.com]</span>
+        <span>5 / {total}</span>
+      </div>
+    </section>
+  </body>
+</html>

@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-lint-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CHROME_PATH: /usr/bin/google-chrome
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+
+      - name: Lint (ESLint + Prettier)
+        run: |
+          npm run lint
+          npx prettier --check .
+      - name: Tip kontrolü (astro check)
+        run: npm run check
+      - name: Build
+        run: npm run build
+        env:
+          SITE_URL: ${{ vars.SITE_URL || 'https://vetrina.example' }}
+
+      - name: Uçtan uca testler + erişilebilirlik (axe)
+        run: |
+          npx astro preview --host 127.0.0.1 --port 4321 &
+          npx --yes wait-on http://127.0.0.1:4321/ --timeout 60000
+          node scripts/qa-e2e.mjs http://127.0.0.1:4321
+          node scripts/qa-axe.mjs http://127.0.0.1:4321 /,/calismalar/,/hizmetler/web-sitesi/,/b2b/,/kvkk/
+          kill %1
+
+      - name: Lighthouse (Performance ≥ 90, Accessibility ≥ 95, SEO ≥ 95)
+        run: npx lhci autorun
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lighthouse-report
+          path: .lighthouseci
+          if-no-files-found: ignore

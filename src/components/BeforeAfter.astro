@@ -1,0 +1,248 @@
+---
+import { works } from '@content/work';
+import ConceptArt from './ConceptArt.astro';
+---
+
+<div class="ba" data-ba>
+  <div class="ba__tabs" role="tablist" aria-label="Çalışma seçimi">
+    {works.map((w, i) => (
+      <button
+        class="ba__tab"
+        role="tab"
+        type="button"
+        id={`ba-tab-${w.slug}`}
+        aria-selected={i === 0 ? 'true' : 'false'}
+        aria-controls={`ba-panel-${w.slug}`}
+        tabindex={i === 0 ? 0 : -1}
+        data-ba-tab={w.slug}
+      >
+        {w.brand}
+      </button>
+    ))}
+  </div>
+
+  {works.map((w, i) => (
+    <div
+      class="ba__panel"
+      role="tabpanel"
+      id={`ba-panel-${w.slug}`}
+      aria-labelledby={`ba-tab-${w.slug}`}
+      hidden={i !== 0}
+      data-ba-panel={w.slug}
+    >
+      <div class="ba__stage glass" style="--pos:50%">
+        <div class="ba__layer ba__layer--after">
+          <ConceptArt work={w} ratio="16 / 10" animated={false} style="after" />
+        </div>
+        <div class="ba__layer ba__layer--before">
+          <ConceptArt work={w} ratio="16 / 10" animated={false} style="before" />
+        </div>
+        <span class="ba__handle" aria-hidden="true">
+          <i></i>
+        </span>
+        <input
+          class="ba__range"
+          type="range"
+          min="0"
+          max="100"
+          value="50"
+          step="1"
+          aria-label={`${w.brand}: önce ve sonra karşılaştırma kaydırıcısı`}
+          data-ba-range
+        />
+        <span class="ba__lbl ba__lbl--b">Önce</span>
+        <span class="ba__lbl ba__lbl--a">Sonra</span>
+      </div>
+      <div class="ba__lists">
+        <div>
+          <p class="ba__lh">Önce</p>
+          <ul>
+            {w.before.map((t) => (
+              <li>{t}</li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <p class="ba__lh">Sonra</p>
+          <ul class="is-after">
+            {w.after.map((t) => (
+              <li>{t}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  ))}
+</div>
+
+<style>
+  .ba__tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+    margin-bottom: var(--sp-4);
+  }
+  .ba__tab {
+    min-height: 44px;
+    padding: 0.5rem 1.1rem;
+    border-radius: var(--r-pill);
+    border: 1px solid var(--glass-border);
+    background: var(--glass);
+    font-weight: 600;
+    font-size: var(--fs-sm);
+    transition: all var(--dur-2);
+  }
+  .ba__tab[aria-selected='true'] {
+    background: linear-gradient(120deg, var(--btn-from), var(--btn-to));
+    color: #fff;
+    border-color: transparent;
+  }
+  .ba__panel[hidden] {
+    display: none;
+  }
+  .ba__stage {
+    position: relative;
+    overflow: hidden;
+    padding: 0;
+    aspect-ratio: 16 / 10;
+    touch-action: pan-y;
+  }
+  .ba__layer {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+  }
+  .ba__layer :global(.art) {
+    height: 100%;
+    aspect-ratio: auto !important;
+  }
+  .ba__layer--before {
+    clip-path: inset(0 calc(100% - var(--pos)) 0 0);
+  }
+  .ba__handle {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: var(--pos);
+    width: 3px;
+    margin-left: -1.5px;
+    background: #fff;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
+    pointer-events: none;
+    z-index: 5;
+  }
+  .ba__handle i {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 46px;
+    height: 46px;
+    margin: -23px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+  }
+  .ba__handle i::before,
+  .ba__handle i::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 8px;
+    height: 8px;
+    border-top: 2.5px solid #0a0f2c;
+    border-left: 2.5px solid #0a0f2c;
+    margin-top: -4px;
+  }
+  .ba__handle i::before {
+    left: 12px;
+    transform: rotate(-45deg);
+  }
+  .ba__handle i::after {
+    right: 12px;
+    transform: rotate(135deg);
+  }
+  .ba__range {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    margin: 0;
+    cursor: ew-resize;
+    z-index: 6;
+  }
+  .ba__stage:has(.ba__range:focus-visible) {
+    outline: 3px solid var(--focus);
+    outline-offset: 3px;
+  }
+  .ba__lbl {
+    position: absolute;
+    bottom: 0.9rem;
+    z-index: 4;
+    padding: 0.3rem 0.8rem;
+    border-radius: var(--r-pill);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: rgba(0, 0, 0, 0.55);
+    color: #fff;
+    pointer-events: none;
+  }
+  .ba__lbl--b {
+    left: 0.9rem;
+  }
+  .ba__lbl--a {
+    right: 0.9rem;
+  }
+  .ba__lists {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sp-5);
+    margin-top: var(--sp-5);
+  }
+  .ba__lh {
+    font-weight: 700;
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--text-muted);
+    margin-bottom: var(--sp-3);
+  }
+  .ba__lists ul {
+    display: grid;
+    gap: 0.5rem;
+  }
+  .ba__lists li {
+    padding-left: 1.5rem;
+    position: relative;
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+  }
+  .ba__lists li::before {
+    content: '×';
+    position: absolute;
+    left: 0;
+    color: var(--c-coral);
+    font-weight: 800;
+  }
+  .ba__lists .is-after li {
+    color: var(--text);
+  }
+  .ba__lists .is-after li::before {
+    content: '✓';
+    color: var(--c-mint);
+  }
+  :global([data-theme='light']) .ba__lists .is-after li::before {
+    color: #0a8a5b;
+  }
+  @media (max-width: 560px) {
+    .ba__stage {
+      aspect-ratio: 4 / 3;
+    }
+    .ba__lists {
+      grid-template-columns: 1fr;
+      gap: var(--sp-4);
+    }
+  }
+</style>

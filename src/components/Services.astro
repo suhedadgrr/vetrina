@@ -1,0 +1,162 @@
+---
+import { services } from '@content/services';
+import { href } from '@lib/url';
+import Icon from './Icon.astro';
+---
+
+<section class="section" id="hizmetler" aria-labelledby="hizmetler-title">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow reveal">Hizmetler</p>
+      <h2 id="hizmetler-title" class="reveal" style="--i:1">
+        Bir vitrin, beş <span class="grad-text">güçlü alan</span>.
+      </h2>
+      <p class="reveal" style="--i:2">
+        Markanızın gördüğü her yüzeyi aynı dille konuşturuyoruz. İhtiyacınız olan parçayla başlayın,
+        birlikte büyüyelim.
+      </p>
+    </header>
+
+    <ul class="svc-grid">
+      {services.map((s, i) => (
+        <li class:list={['svc reveal', i === 0 && 'svc--wide']} style={`--i:${i};--h:${s.hue}`}>
+          <a
+            class="svc__link glass"
+            href={href(`/hizmetler/${s.slug}/`)}
+            data-tilt
+            data-track="service_click"
+            data-track-where={s.slug}
+          >
+            <span class="svc__icon">
+              <Icon name={s.icon} size={28} />
+            </span>
+            <span class="svc__n" aria-hidden="true">
+              0{i + 1}
+            </span>
+            <h3>{s.title}</h3>
+            <p>{s.short}</p>
+            <span class="svc__more">
+              Detaylar <Icon name="arrow" size={18} class="arrow" />
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .svc-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: var(--sp-4);
+  }
+  .svc {
+    grid-column: span 2;
+  }
+  .svc--wide {
+    grid-column: span 4;
+  }
+  .svc__link {
+    position: relative;
+    display: grid;
+    align-content: start;
+    gap: var(--sp-3);
+    height: 100%;
+    min-height: 15rem;
+    padding: clamp(1.4rem, 3vw, 2.2rem);
+    overflow: hidden;
+    transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+    transition:
+      transform 0.35s var(--ease-out),
+      border-color var(--dur-2);
+  }
+  .svc__link::before {
+    content: '';
+    position: absolute;
+    inset: auto -20% -50% auto;
+    width: 70%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle, hsl(var(--h) 90% 62% / 0.35), transparent 65%);
+    transition: transform 0.6s var(--ease-out);
+  }
+  .svc__link:hover {
+    border-color: hsl(var(--h) 90% 70% / 0.7);
+  }
+  .svc__link:hover::before {
+    transform: scale(1.4) translate(-10%, -10%);
+  }
+  .svc__icon {
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    background: hsl(var(--h) 85% 60% / 0.18);
+    color: hsl(var(--h) 100% 78%);
+    border: 1px solid hsl(var(--h) 90% 70% / 0.3);
+  }
+  :global([data-theme='light']) .svc__icon {
+    color: hsl(var(--h) 70% 35%);
+  }
+  .svc__n {
+    position: absolute;
+    right: 1.4rem;
+    top: 1.1rem;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 2.2rem;
+    color: var(--line);
+  }
+  .svc h3 {
+    font-size: var(--fs-xl);
+    position: relative;
+  }
+  .svc p {
+    color: var(--text-muted);
+    font-size: var(--fs-base);
+    position: relative;
+    max-width: 34rem;
+  }
+  .svc__more {
+    position: relative;
+    margin-top: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 700;
+    font-size: var(--fs-sm);
+    color: var(--accent);
+  }
+  .svc__link:hover .arrow {
+    transform: translateX(5px);
+  }
+  .svc__more :global(.arrow) {
+    transition: transform var(--dur-2) var(--ease-out);
+  }
+  @media (max-width: 960px) {
+    .svc-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .svc,
+    .svc--wide {
+      grid-column: span 1;
+    }
+    .svc--wide,
+    .svc:nth-child(5) {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (max-width: 620px) {
+    .svc-grid {
+      grid-template-columns: 1fr;
+    }
+    .svc:nth-child(n) {
+      grid-column: 1;
+    }
+    .svc__link {
+      min-height: 0;
+    }
+  }
+</style>

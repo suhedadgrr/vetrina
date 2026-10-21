@@ -1,0 +1,119 @@
+---
+import { faq } from '@content/faq';
+import Icon from './Icon.astro';
+---
+
+<section class="section" id="sss" aria-labelledby="sss-title">
+  <div class="container faq">
+    <header class="section-head">
+      <p class="eyebrow reveal">SSS</p>
+      <h2 id="sss-title" class="reveal" style="--i:1">
+        Aklınızdaki <span class="grad-text">sorular</span>.
+      </h2>
+      <p class="reveal" style="--i:2">
+        Bulamadığınız bir şey varsa WhatsApp’tan ya da formdan yazın; aynı gün dönmeye çalışıyoruz.
+      </p>
+    </header>
+    <div class="faq__list">
+      {faq.map((f, i) => (
+        <details
+          class="faq__item glass reveal"
+          name="sss"
+          style={`--i:${Math.min(i, 4)}`}
+          open={i === 0}
+        >
+          <summary>
+            <span>{f.q}</span>
+            <span class="faq__ic" aria-hidden="true">
+              <Icon name="plus" size={20} />
+            </span>
+          </summary>
+          <div class="faq__a">
+            <p>{f.a}</p>
+          </div>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: start;
+  }
+  .faq .section-head {
+    margin-bottom: 0;
+    position: sticky;
+    top: calc(var(--header-h) + 2rem);
+  }
+  .faq__list {
+    display: grid;
+    gap: var(--sp-3);
+  }
+  .faq__item {
+    padding: 0;
+    border-radius: var(--r-md);
+    overflow: hidden;
+    transition: border-color var(--dur-2);
+  }
+  .faq__item[open] {
+    border-color: var(--accent);
+  }
+  summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--sp-4);
+    padding: 1.15rem 1.4rem;
+    min-height: 56px;
+    font-weight: 700;
+    font-size: var(--fs-base);
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  .faq__ic {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    transition: transform var(--dur-2) var(--ease-out);
+  }
+  .faq__item[open] .faq__ic {
+    transform: rotate(45deg);
+    background: var(--accent);
+    color: #0a0f2c;
+  }
+  .faq__a {
+    padding: 0 1.4rem 1.3rem;
+    color: var(--text-muted);
+    max-width: 42rem;
+  }
+  .faq__item[open] .faq__a {
+    animation: faq-in 0.45s var(--ease-out);
+  }
+  @keyframes faq-in {
+    from {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+  }
+  @media (max-width: 900px) {
+    .faq {
+      grid-template-columns: 1fr;
+    }
+    .faq .section-head {
+      position: static;
+      margin-bottom: var(--sp-5);
+    }
+  }
+</style>

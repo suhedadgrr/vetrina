@@ -1,0 +1,240 @@
+---
+import Base from '@layouts/Base.astro';
+import ConceptArt from '@components/ConceptArt.astro';
+import ContactForm from '@components/ContactForm.astro';
+import Icon from '@components/Icon.astro';
+import { works, getWork } from '@content/work';
+import { href, abs } from '@lib/url';
+
+export function getStaticPaths() {
+  return works.map((w) => ({ params: { slug: w.slug } }));
+}
+const w = getWork(Astro.params.slug!)!;
+const path = `/calismalar/${w.slug}/`;
+const next = works[(works.findIndex((x) => x.slug === w.slug) + 1) % works.length];
+const ld = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'CreativeWork',
+    name: `${w.brand} — ${w.concept ? 'konsept çalışma' : 'vaka'}`,
+    description: w.tagline,
+    creator: { '@id': abs('/#org', Astro.site) },
+    url: abs(path, Astro.site),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Ana sayfa', item: abs('/', Astro.site) },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Çalışmalar',
+        item: abs('/calismalar/', Astro.site),
+      },
+      { '@type': 'ListItem', position: 3, name: w.brand, item: abs(path, Astro.site) },
+    ],
+  },
+];
+---
+
+<Base
+  title={`${w.brand} — ${w.concept ? 'Konsept çalışma' : 'Vaka'}`}
+  description={`${w.tagline} ${w.category} için ${w.services.join(', ')}.`}
+  path={path}
+  og={`calisma-${w.slug}`}
+  jsonLd={ld}
+>
+  <section class="page-hero">
+    <div class="container head">
+      <div>
+        <nav class="breadcrumb" aria-label="Sayfa yolu">
+          <a href={href('/')}>Ana sayfa</a> / <a href={href('/calismalar/')}>Çalışmalar</a> /{' '}
+          <span aria-current="page">{w.brand}</span>
+        </nav>
+        <p class="eyebrow">{w.concept ? 'Konsept çalışma · kurgusal marka' : 'Vaka'}</p>
+        <h1>{w.brand}</h1>
+        <p class="lead">{w.tagline}</p>
+        <ul class="tags">
+          {[w.category, ...w.services].map((t) => (
+            <li>{t}</li>
+          ))}
+        </ul>
+      </div>
+      <div class="art glass">
+        <ConceptArt work={w} ratio="4 / 5" animated={true} />
+      </div>
+    </div>
+  </section>
+
+  <section class="section--tight">
+    <div class="container cols">
+      <article class="glass box reveal">
+        <h2>Zorluk</h2>
+        <p>{w.challenge}</p>
+      </article>
+      <article class="glass box reveal" style="--i:1">
+        <h2>Yaklaşım</h2>
+        <p>{w.approach}</p>
+      </article>
+      <article class="glass box reveal" style="--i:2">
+        <h2>{w.concept ? 'Hedef sonuç' : 'Teslim edilenler'}</h2>
+        <p>{w.result}</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section--tight">
+    <div class="container">
+      <div class="ba2">
+        <div>
+          <h2>Önce</h2>
+          <ul class="bad">
+            {w.before.map((t) => (
+              <li>{t}</li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <h2>Sonra</h2>
+          <ul class="good">
+            {w.after.map((t) => (
+              <li>{t}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+      <p class="note">
+        {w.concept
+          ? 'Bu çalışma kurgusal bir markaya ait konsept çalışmadır; gerçek bir müşteri işi veya sonuç iddiası değildir.'
+          : (w.permissionNote ?? '')}
+        {!w.concept && w.url && (
+          <>
+            {' '}
+            <a href={w.url} target="_blank" rel="noopener">
+              Siteyi aç ↗
+            </a>
+          </>
+        )}
+      </p>
+      <div class="nav">
+        <a class="btn btn--ghost" href={href('/calismalar/')}>
+          ← Tüm çalışmalar
+        </a>
+        <a class="btn btn--ghost" href={href(`/calismalar/${next.slug}/`)}>
+          Sonraki: {next.brand} <Icon name="arrow" class="arrow" />
+        </a>
+      </div>
+    </div>
+  </section>
+  <ContactForm />
+</Base>
+<style>
+  .head {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+  }
+  .art {
+    padding: 0.6rem;
+    max-width: 26rem;
+    justify-self: end;
+    width: 100%;
+  }
+  .art :global(.art) {
+    border-radius: calc(var(--r-lg) - 6px);
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: var(--sp-5);
+  }
+  .tags li {
+    padding: 0.3rem 0.8rem;
+    border: 1px solid var(--line);
+    border-radius: var(--r-pill);
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+  }
+  .cols {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--sp-4);
+  }
+  .box {
+    padding: clamp(1.3rem, 3vw, 2rem);
+  }
+  .box h2 {
+    font-size: var(--fs-lg);
+    margin-bottom: var(--sp-3);
+    color: var(--accent);
+  }
+  .box p {
+    color: var(--text-muted);
+  }
+  .ba2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sp-6);
+  }
+  .ba2 h2 {
+    font-size: var(--fs-xl);
+    margin-bottom: var(--sp-3);
+  }
+  .ba2 ul {
+    display: grid;
+    gap: 0.6rem;
+  }
+  .ba2 li {
+    padding-left: 1.6rem;
+    position: relative;
+    color: var(--text-muted);
+  }
+  .bad li::before {
+    content: '×';
+    position: absolute;
+    left: 0;
+    color: var(--c-coral);
+    font-weight: 800;
+  }
+  .good li {
+    color: var(--text);
+  }
+  .good li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--c-mint);
+    font-weight: 800;
+  }
+  :global([data-theme='light']) .good li::before {
+    color: #0a8a5b;
+  }
+  .note {
+    margin-top: var(--sp-6);
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+    border-left: 3px solid var(--warm);
+    padding-left: var(--sp-4);
+  }
+  .nav {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--sp-3);
+    flex-wrap: wrap;
+    margin-top: var(--sp-6);
+  }
+  @media (max-width: 900px) {
+    .head,
+    .cols,
+    .ba2 {
+      grid-template-columns: 1fr;
+    }
+    .art {
+      justify-self: start;
+      max-width: 20rem;
+    }
+  }
+</style>

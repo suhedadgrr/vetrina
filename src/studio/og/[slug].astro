@@ -1,0 +1,227 @@
+---
+import Studio from '@layouts/Studio.astro';
+import BrandMark from '@components/BrandMark.astro';
+import ConceptArt from '@components/ConceptArt.astro';
+import { works } from '@content/work';
+import { services } from '@content/services';
+
+interface Card {
+  slug: string;
+  kicker: string;
+  title: string;
+  sub: string;
+  work?: (typeof works)[number];
+}
+const cards: Card[] = [
+  {
+    slug: 'home',
+    kicker: 'Dijital ajans',
+    title: 'Markanız vitrinde fark edilsin, akılda kalsın.',
+    sub: 'Sosyal medya · Web · Kurumsal kimlik · B2B iletişim · Motion',
+  },
+  {
+    slug: 'calismalar',
+    kicker: 'Portföy',
+    title: 'Konsept çalışmalarımız',
+    sub: 'Yaklaşımımızı gösteren kurgusal markalar',
+  },
+  {
+    slug: 'b2b',
+    kicker: 'B2B marka iletişimi',
+    title: 'Teklif masasında öne çıkan sunum ve kataloglar',
+    sub: 'Örnek sunumu indirin',
+  },
+  {
+    slug: 'blog',
+    kicker: 'Blog',
+    title: 'Kısa, uygulanabilir marka notları',
+    sub: 'B2B marka · sosyal medya · web',
+  },
+  ...services.map((s) => ({
+    slug: `hizmet-${s.slug}`,
+    kicker: 'Hizmet',
+    title: s.title,
+    sub: s.short,
+  })),
+  ...works.map((w) => ({
+    slug: `calisma-${w.slug}`,
+    kicker: w.concept ? 'Konsept çalışma' : 'Vaka',
+    title: w.brand,
+    sub: w.tagline,
+    work: w,
+  })),
+];
+export function getStaticPaths() {
+  return [
+    'home',
+    'calismalar',
+    'b2b',
+    'blog',
+    ...services.map((s) => `hizmet-${s.slug}`),
+    ...works.map((w) => `calisma-${w.slug}`),
+  ].map((slug) => ({ params: { slug } }));
+}
+const c = cards.find((x) => x.slug === Astro.params.slug)!;
+const [w1, w2, w3] = works;
+---
+
+<Studio title={`OG ${c.slug}`} width={1200} height={630}>
+  <div class="og">
+    <span class="bg a"></span>
+    <span class="bg b"></span>
+    <span class="grid"></span>
+    <div class="left">
+      <div class="brand">
+        <BrandMark size={52} />
+        <b>Vetrina</b>
+      </div>
+      <div>
+        <p class="kicker">{c.kicker}</p>
+        <h1 class:list={[c.title.length > 40 && 'long']}>{c.title}</h1>
+        <p class="sub">{c.sub}</p>
+      </div>
+      <p class="foot">Ücretsiz Mini Analiz İste →</p>
+    </div>
+    <div class="right">
+      {c.work ? (
+        <div class="single">
+          <ConceptArt work={c.work} ratio="4 / 5" animated={false} />
+        </div>
+      ) : (
+        <div class="stack">
+          <div class="t t1">
+            <ConceptArt work={w1} ratio="16 / 10" animated={false} label={false} />
+          </div>
+          <div class="t t2">
+            <ConceptArt work={w2} ratio="4 / 5" animated={false} label={false} />
+          </div>
+          <div class="t t3">
+            <ConceptArt work={w3} ratio="3 / 4" animated={false} label={false} />
+          </div>
+        </div>
+      )}
+    </div>
+  </div>
+</Studio>
+<style is:global>
+  .og {
+    position: relative;
+    width: 1200px;
+    height: 630px;
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    overflow: hidden;
+    background: #0a0f2c;
+    color: #f3f5ff;
+    font-family: var(--font-body);
+  }
+  .og .bg {
+    position: absolute;
+    border-radius: 50%;
+  }
+  .og .a {
+    width: 820px;
+    height: 820px;
+    left: -260px;
+    top: -340px;
+    background: radial-gradient(circle, rgba(108, 92, 255, 0.65), transparent 62%);
+  }
+  .og .b {
+    width: 700px;
+    height: 700px;
+    right: -220px;
+    bottom: -300px;
+    background: radial-gradient(circle, rgba(47, 107, 255, 0.5), transparent 62%);
+  }
+  .og .grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(160, 175, 255, 0.12) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(160, 175, 255, 0.12) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 70% 70% at 30% 40%, #000, transparent 80%);
+  }
+  .og .left {
+    position: relative;
+    padding: 56px 40px 52px 64px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .og .brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 38px;
+    letter-spacing: -0.03em;
+  }
+  .og .kicker {
+    font-size: 20px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #9a8fff;
+    font-weight: 700;
+    margin-bottom: 18px;
+  }
+  .og h1 {
+    font-size: 68px;
+    line-height: 1.02;
+    letter-spacing: -0.04em;
+    font-weight: 800;
+    max-width: 11.5em;
+  }
+  .og h1.long {
+    font-size: 56px;
+  }
+  .og .sub {
+    margin-top: 20px;
+    font-size: 24px;
+    color: #b3bae0;
+    max-width: 24em;
+    line-height: 1.35;
+  }
+  .og .foot {
+    font-size: 22px;
+    font-weight: 700;
+    color: #ffb84d;
+  }
+  .og .right {
+    position: relative;
+  }
+  .og .single {
+    position: absolute;
+    right: 56px;
+    top: 50%;
+    width: 380px;
+    transform: translateY(-50%) rotate(3deg);
+    border-radius: 26px;
+    overflow: hidden;
+    box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  .og .t {
+    position: absolute;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 30px 60px -16px rgba(0, 0, 0, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  .og .t1 {
+    width: 400px;
+    right: 28px;
+    top: 70px;
+  }
+  .og .t2 {
+    width: 210px;
+    right: 24px;
+    top: 270px;
+  }
+  .og .t3 {
+    width: 190px;
+    right: 270px;
+    bottom: 54px;
+  }
+</style>

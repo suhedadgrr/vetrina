@@ -1,0 +1,134 @@
+---
+import Studio from '@layouts/Studio.astro';
+import BrandMark from '@components/BrandMark.astro';
+import ConceptArt from '@components/ConceptArt.astro';
+import { works } from '@content/work';
+
+export function getStaticPaths() {
+  return works.flatMap((w) =>
+    ['1350', '1920'].map((format) => ({ params: { slug: w.slug, format } })),
+  );
+}
+const { slug, format } = Astro.params;
+const w = works.find((x) => x.slug === slug)!;
+const h = Number(format);
+const artH = h === 1920 ? 980 : 760;
+---
+
+<Studio title={`Paylaşım ${slug} ${format}`} width={1080} height={h}>
+  <div
+    class="sh"
+    style={`--bg:${w.palette.bg};--fg:${w.palette.fg};--a:${w.palette.a};--b:${w.palette.b}`}
+  >
+    <div class="top">
+      <span class="brand">
+        <BrandMark size={48} /> Vetrina
+      </span>
+      <span class="pill">Konsept çalışma</span>
+    </div>
+    <div class="art" style={`height:${artH}px`}>
+      <ConceptArt work={w} ratio={`1080 / ${artH}`} animated={false} label={false} />
+    </div>
+    <div class="info">
+      <p class="cat">
+        {w.category} · {w.services.join(' · ')}
+      </p>
+      <h2>{w.tagline}</h2>
+      <p class="cta">
+        Vitrininiz için ücretsiz mini analiz → <b>[@vetrina]</b>
+      </p>
+    </div>
+  </div>
+</Studio>
+<style is:global>
+  .sh {
+    position: relative;
+    width: 1080px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: #0a0f2c;
+    color: #f3f5ff;
+    font-family: var(--font-body);
+    overflow: hidden;
+  }
+  .sh::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(
+        70% 40% at 80% 0%,
+        color-mix(in srgb, var(--a) 55%, transparent),
+        transparent 70%
+      ),
+      radial-gradient(
+        60% 40% at 0% 100%,
+        color-mix(in srgb, var(--b) 40%, transparent),
+        transparent 70%
+      );
+  }
+  .sh .top {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 56px 64px 28px;
+  }
+  .sh .brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 40px;
+    letter-spacing: -0.03em;
+  }
+  .sh .pill {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 10px 22px;
+    border: 1.5px solid rgba(255, 255, 255, 0.35);
+    border-radius: 99px;
+  }
+  .sh .art {
+    position: relative;
+    margin: 0;
+    width: 100%;
+    overflow: hidden;
+  }
+  .sh .art .art {
+    height: 100%;
+    aspect-ratio: auto !important;
+    border-radius: 0;
+  }
+  .sh .info {
+    position: relative;
+    padding: 36px 64px 56px;
+    display: grid;
+    gap: 18px;
+    margin-top: auto;
+  }
+  .sh .cat {
+    font-size: 24px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #9a8fff;
+    font-weight: 700;
+  }
+  .sh h2 {
+    font-size: 64px;
+    line-height: 1.04;
+    letter-spacing: -0.035em;
+    font-weight: 800;
+  }
+  .sh .cta {
+    font-size: 28px;
+    color: #b3bae0;
+  }
+  .sh .cta b {
+    color: #ffb84d;
+  }
+</style>

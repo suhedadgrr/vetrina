@@ -1,0 +1,48 @@
+---
+import Legal from '@layouts/Legal.astro';
+import { legal, contact } from '@content/site';
+---
+
+<Legal
+  title="KVKK Aydınlatma Metni"
+  path="/kvkk/"
+  description="Vetrina KVKK Aydınlatma Metni: kişisel verilerinizin işlenme amacı, hukuki sebebi, saklama süresi ve haklarınız."
+>
+  <h2>1. Veri sorumlusu</h2>
+  <p>
+    6698 sayılı Kişisel Verilerin Korunması Kanunu (“KVKK”) uyarınca veri sorumlusu:{' '}
+    {legal.dataController}.
+  </p>
+  <h2>2. İşlenen kişisel veriler</h2>
+  <ul>
+    <li>Kimlik ve iletişim: ad soyad, e-posta, telefon, firma adı</li>
+    <li>Talep bilgisi: seçtiğiniz hizmet, paylaştığınız hesap/site bağlantısı, notunuz</li>
+    <li>İşlem güvenliği: IP adresi, tarayıcı bilgisi (yalnızca spam önleme amacıyla)</li>
+    <li>Pazarlama kaynağı: UTM parametreleri (hangi kanaldan geldiğiniz)</li>
+  </ul>
+  <h2>3. İşleme amaçları ve hukuki sebep</h2>
+  <p>
+    Verileriniz; mini analiz ve teklif taleplerinizi yanıtlamak, sizinle iletişim kurmak ve hizmet
+    kalitesini ölçmek amacıyla işlenir. Hukuki sebepler: KVKK m.5/2-c (sözleşmenin kurulması için ön
+    hazırlık), m.5/2-f (meşru menfaat) ve açık rızanız.
+  </p>
+  <h2>4. Aktarım</h2>
+  <p>
+    Form verileriniz, form altyapısı sağlayıcımız (Web3Forms), spam koruması (Cloudflare Turnstile)
+    ve — onay vermeniz halinde — analitik sağlayıcımız (Plausible) ile sınırlı olarak
+    paylaşılabilir. Bu sağlayıcıların bir kısmı yurt dışında bulunabilir; aktarım KVKK m.9
+    hükümlerine uygun yapılır.
+  </p>
+  <h2>5. Saklama süresi</h2>
+  <p>
+    Talep bilgileriniz, talebin sonuçlanmasından itibaren 2 yıl süreyle saklanır, ardından silinir
+    veya anonimleştirilir.
+  </p>
+  <h2>6. Haklarınız (KVKK m.11)</h2>
+  <p>
+    Verilerinizin işlenip işlenmediğini öğrenme, bilgi talep etme, düzeltme, silme, itiraz etme ve
+    zarar halinde tazminat talep etme haklarına sahipsiniz.
+  </p>
+  <h2>7. Başvuru</h2>
+  <p>Taleplerinizi {contact.email} adresine iletebilirsiniz.</p>
+</Legal>

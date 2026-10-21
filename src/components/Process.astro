@@ -1,0 +1,137 @@
+---
+import { process } from '@content/process';
+---
+
+<section class="section" id="surec" aria-labelledby="surec-title">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow reveal">Süreç</p>
+      <h2 id="surec-title" class="reveal" style="--i:1">
+        Dört adım, sıfır <span class="grad-text">belirsizlik</span>.
+      </h2>
+      <p class="reveal" style="--i:2">
+        Ne zaman ne olacağını baştan bilirsiniz. Her adımın çıktısı yazılı ve onayınıza tabidir.
+      </p>
+    </header>
+
+    <ol class="tl" data-timeline>
+      <span class="tl__rail" aria-hidden="true">
+        <span class="tl__fill" data-timeline-fill></span>
+      </span>
+      {process.map((s) => (
+        <li class="tl__item reveal" style={`--i:0`} data-step>
+          <span class="tl__dot" aria-hidden="true">
+            <b>{s.n}</b>
+          </span>
+          <div class="tl__card glass">
+            <p class="tl__time">{s.time}</p>
+            <h3>{s.title}</h3>
+            <p>{s.text}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .tl {
+    position: relative;
+    display: grid;
+    gap: var(--sp-5);
+    padding-left: clamp(3.5rem, 8vw, 5.5rem);
+    counter-reset: s;
+  }
+  .tl__rail {
+    position: absolute;
+    left: clamp(1.15rem, 3vw, 1.9rem);
+    top: 1rem;
+    bottom: 1rem;
+    width: 3px;
+    background: var(--line);
+    border-radius: 3px;
+  }
+  .tl__fill {
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 100%;
+    transform-origin: top;
+    transform: scaleY(var(--p, 0));
+    background: linear-gradient(var(--c-violet), var(--c-blue), var(--c-amber));
+    border-radius: 3px;
+  }
+  .tl__item {
+    position: relative;
+  }
+  .tl__dot {
+    position: absolute;
+    left: calc(-1 * clamp(3.5rem, 8vw, 5.5rem) + clamp(1.15rem, 3vw, 1.9rem) - 1.15rem + 1.5px);
+    top: 1rem;
+    width: 2.3rem;
+    height: 2.3rem;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--bg);
+    border: 2px solid var(--line);
+    font-size: 0.7rem;
+    font-weight: 800;
+    transition: all var(--dur-3) var(--ease-out);
+    z-index: 1;
+  }
+  .tl__item.is-active .tl__dot {
+    background: linear-gradient(120deg, var(--btn-from), var(--btn-to));
+    color: #fff;
+    border-color: transparent;
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--c-violet) 25%, transparent);
+  }
+  .tl__card {
+    padding: clamp(1.2rem, 3vw, 2rem);
+    display: grid;
+    gap: 0.4rem;
+  }
+  .tl__time {
+    font-size: var(--fs-xs);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--warm);
+    font-weight: 700;
+  }
+  .tl__card h3 {
+    font-size: var(--fs-xl);
+  }
+  .tl__card p:last-child {
+    color: var(--text-muted);
+    max-width: 40rem;
+  }
+  @media (min-width: 900px) {
+    .tl {
+      grid-template-columns: repeat(4, 1fr);
+      padding-left: 0;
+      padding-top: 4.5rem;
+      gap: var(--sp-4);
+    }
+    .tl__rail {
+      left: 0;
+      right: 0;
+      top: 1.1rem;
+      bottom: auto;
+      width: auto;
+      height: 3px;
+    }
+    .tl__fill {
+      inset: 0 auto 0 0;
+      width: 100%;
+      height: 100%;
+      transform-origin: left;
+      transform: scaleX(var(--p, 0));
+    }
+    .tl__dot {
+      left: 1rem;
+      top: -3.5rem;
+    }
+    .tl__card {
+      height: 100%;
+    }
+  }
+</style>

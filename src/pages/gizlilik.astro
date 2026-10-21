@@ -1,0 +1,37 @@
+---
+import Legal from '@layouts/Legal.astro';
+import { contact } from '@content/site';
+import { href } from '@lib/url';
+---
+
+<Legal
+  title="Gizlilik Politikası"
+  path="/gizlilik/"
+  description="Vetrina Gizlilik Politikası: hangi verileri topluyoruz, nasıl kullanıyoruz ve nasıl koruyoruz."
+>
+  <h2>Genel</h2>
+  <p>
+    Vetrina olarak gizliliğinize saygı duyuyoruz. Bu site yalnızca ihtiyaç duyduğumuz en az veriyi
+    toplar; verilerinizi satmaz ve reklam profili oluşturmaz.
+  </p>
+  <h2>Topladığımız veriler</h2>
+  <ul>
+    <li>
+      İletişim formu: gönderdiğiniz bilgiler (<a href={href('/kvkk/')}>KVKK Aydınlatma Metni</a>).
+    </li>
+    <li>
+      Analitik (yalnızca onayınızla): sayfa görüntüleme ve dönüşüm olayları. Plausible çerezsiz
+      çalışır ve kişisel profil oluşturmaz.
+    </li>
+    <li>Tercihler: tema (koyu/açık) ve çerez seçiminiz tarayıcınızda yerel olarak saklanır.</li>
+  </ul>
+  <h2>Üçüncü taraf hizmetler</h2>
+  <p>
+    Web3Forms (form iletimi), Cloudflare Turnstile (spam koruması), Plausible (analitik, opsiyonel),
+    WhatsApp (tıkladığınızda).
+  </p>
+  <h2>İletişim</h2>
+  <p>
+    Sorularınız için: {contact.email}
+  </p>
+</Legal>

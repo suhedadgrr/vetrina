@@ -1,0 +1,235 @@
+---
+import Base from '@layouts/Base.astro';
+import ContactForm from '@components/ContactForm.astro';
+import Icon from '@components/Icon.astro';
+import { services, getService } from '@content/services';
+import { abs, href } from '@lib/url';
+
+export function getStaticPaths() {
+  return services.map((s) => ({ params: { slug: s.slug } }));
+}
+const s = getService(Astro.params.slug!)!;
+const path = `/hizmetler/${s.slug}/`;
+const others = services.filter((x) => x.slug !== s.slug);
+const ld = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: s.title,
+    description: s.lead,
+    provider: { '@id': abs('/#org', Astro.site) },
+    areaServed: 'TR',
+    url: abs(path, Astro.site),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Ana sayfa', item: abs('/', Astro.site) },
+      { '@type': 'ListItem', position: 2, name: 'Hizmetler', item: abs('/#hizmetler', Astro.site) },
+      { '@type': 'ListItem', position: 3, name: s.title, item: abs(path, Astro.site) },
+    ],
+  },
+];
+---
+
+<Base
+  title={s.title}
+  description={`${s.lead} ${s.for}`}
+  path={path}
+  og={`hizmet-${s.slug}`}
+  jsonLd={ld}
+>
+  <section class="page-hero" style={`--h:${s.hue}`}>
+    <div class="glow" aria-hidden="true"></div>
+    <div class="container">
+      <nav class="breadcrumb" aria-label="Sayfa yolu">
+        <a href={href('/')}>Ana sayfa</a> / <a href={href('/#hizmetler')}>Hizmetler</a> /{' '}
+        <span aria-current="page">{s.title}</span>
+      </nav>
+      <p class="eyebrow">
+        <Icon name={s.icon} size={18} /> Hizmet
+      </p>
+      <h1>{s.title}</h1>
+      <p class="lead">{s.lead}</p>
+      <div class="actions">
+        <a
+          class="btn btn--primary"
+          href={href('/#iletisim')}
+          data-track="cta_click"
+          data-track-where={`service-${s.slug}`}
+          data-prefill={s.title}
+        >
+          Ücretsiz Mini Analiz İste <Icon name="arrow" class="arrow" />
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section--tight">
+    <div class="container two">
+      <div class="glass box reveal">
+        <h2>Kimler için?</h2>
+        <p>{s.for}</p>
+        <h2 class="mt">Süre</h2>
+        <p>{s.timeline}</p>
+      </div>
+      <div class="glass box reveal" style="--i:1">
+        <h2>Neleri kapsar?</h2>
+        <ul class="ticks">
+          {s.includes.map((i) => (
+            <li>
+              <Icon name="check" size={18} /> {i}
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div class="glass box reveal" style="--i:2">
+        <h2>Teslimatlar</h2>
+        <ul class="ticks">
+          {s.deliverables.map((i) => (
+            <li>
+              <Icon name="check" size={18} /> {i}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section--tight">
+    <div class="container">
+      <h2 class="h2">Bu hizmete özel sorular</h2>
+      <div class="qa">
+        {s.faq.map((f) => (
+          <details class="glass q" name="svc-q">
+            <summary>{f.q}</summary>
+            <p>{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section--tight">
+    <div class="container">
+      <h2 class="h2">Diğer hizmetler</h2>
+      <ul class="others">
+        {others.map((o) => (
+          <li>
+            <a class="glass" href={href(`/hizmetler/${o.slug}/`)}>
+              <Icon name={o.icon} size={22} /> <span>{o.title}</span>
+              <Icon name="arrow" size={18} />
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <ContactForm />
+</Base>
+
+<style>
+  .page-hero {
+    position: relative;
+  }
+  .glow {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(50% 70% at 85% 0%, hsl(var(--h) 90% 60% / 0.35), transparent 70%);
+    pointer-events: none;
+  }
+  .page-hero .eyebrow {
+    margin-bottom: var(--sp-4);
+  }
+  .actions {
+    margin-top: var(--sp-6);
+  }
+  .two {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--sp-4);
+  }
+  .box {
+    padding: clamp(1.3rem, 3vw, 2rem);
+  }
+  .box h2 {
+    font-size: var(--fs-lg);
+    margin-bottom: var(--sp-3);
+  }
+  .box p {
+    color: var(--text-muted);
+  }
+  .mt {
+    margin-top: var(--sp-5);
+  }
+  .ticks {
+    display: grid;
+    gap: 0.7rem;
+  }
+  .ticks li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.6rem;
+    color: var(--text-muted);
+  }
+  .ticks :global(svg) {
+    color: var(--c-mint);
+    margin-top: 0.2rem;
+  }
+  :global([data-theme='light']) .ticks :global(svg) {
+    color: #0a8a5b;
+  }
+  .h2 {
+    font-size: var(--fs-2xl);
+    margin-bottom: var(--sp-5);
+  }
+  .qa {
+    display: grid;
+    gap: var(--sp-3);
+    max-width: 50rem;
+  }
+  .q {
+    padding: 0;
+    border-radius: var(--r-md);
+  }
+  .q summary {
+    cursor: pointer;
+    padding: 1.1rem 1.4rem;
+    font-weight: 700;
+    min-height: 56px;
+    display: flex;
+    align-items: center;
+  }
+  .q p {
+    padding: 0 1.4rem 1.2rem;
+    color: var(--text-muted);
+  }
+  .others {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--sp-3);
+  }
+  .others a {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+    padding: 1.1rem 1.4rem;
+    min-height: 64px;
+    font-weight: 700;
+    transition: border-color var(--dur-2);
+  }
+  .others a span {
+    flex: 1;
+  }
+  .others a:hover {
+    border-color: var(--accent);
+  }
+  @media (max-width: 900px) {
+    .two,
+    .others {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

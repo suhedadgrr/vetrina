@@ -1,0 +1,89 @@
+---
+import { contentWorks } from '@content/icerik-isleri';
+import Icon from './Icon.astro';
+---
+
+<section class="section--tight cw" aria-labelledby="cw-title">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow reveal">İçerik ve sosyal medya</p>
+      <h2 id="cw-title" class="reveal" style="--i:1">
+        Kurucunun içerik çalışmaları
+      </h2>
+      <p class="reveal" style="--i:2">
+        Vetrina’yı kuran Berre Şuheda Doğru’nun markalar için ürettiği içerik ve sosyal medya
+        çalışmalarından seçmeler. Hesaplar herkese açıktır.
+      </p>
+    </header>
+    <ul class="cw__grid">
+      {contentWorks.map((w, i) => (
+        <li class="cw__card glass reveal" style={`--i:${i}`}>
+          <p class="cw__sector">{w.sector}</p>
+          <h3>{w.brand}</h3>
+          <p class="cw__note">{w.note}</p>
+          <p class="cw__scope">
+            {w.count && <strong>{w.count} · </strong>}
+            {w.scope}
+          </p>
+          <a
+            class="cw__link"
+            href={w.instagram}
+            target="_blank"
+            rel="noopener"
+            data-track="social_click"
+            data-track-where={`cw-${w.brand}`}
+          >
+            {w.handle} <Icon name="arrow" size={16} />
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .cw__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--sp-4);
+  }
+  .cw__card {
+    display: grid;
+    gap: var(--sp-2);
+    align-content: start;
+    padding: clamp(1.2rem, 2.5vw, 1.8rem);
+  }
+  .cw__sector {
+    font-size: var(--fs-xs);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .cw__note,
+  .cw__scope {
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+  }
+  .cw__scope strong {
+    color: var(--text);
+  }
+  .cw__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: var(--sp-2);
+    font-weight: 700;
+    color: var(--accent);
+  }
+  @media (max-width: 960px) {
+    .cw__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 640px) {
+    .cw__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

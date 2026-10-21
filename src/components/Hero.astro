@@ -1,0 +1,527 @@
+---
+import { hero, cta } from '@content/site';
+import { works } from '@content/work';
+import { href } from '@lib/url';
+import Icon from './Icon.astro';
+import ConceptArt from './ConceptArt.astro';
+
+// "*vurgulu*" kelimeleri işaretler; her kelime sırayla belirir.
+const tokens: { t: string; em: boolean }[] = [];
+let em = false;
+for (const raw of hero.title.split(' ')) {
+  let w = raw;
+  if (w.startsWith('*')) {
+    em = true;
+    w = w.slice(1);
+  }
+  const closes = w.replace(/[.,!?]+$/, '').endsWith('*');
+  w = w.replace('*', '');
+  tokens.push({ t: w, em });
+  if (closes) em = false;
+}
+const [w1, w2, w3] = [works[0], works[1], works[2]];
+---
+
+<section class="hero" data-hero aria-labelledby="hero-title">
+  <div class="hero__bg" aria-hidden="true">
+    <span class="orb orb--a" data-parallax="0.12"></span>
+    <span class="orb orb--b" data-parallax="-0.08"></span>
+    <span class="orb orb--c" data-parallax="0.18"></span>
+    <span class="hero__grid"></span>
+    <span class="hero__beam"></span>
+    <span class="hero__spot" data-spot></span>
+  </div>
+
+  <div class="container hero__in">
+    <div class="hero__copy">
+      <p class="eyebrow hero__eyebrow">{hero.eyebrow}</p>
+      <h1 id="hero-title" class="hero__title">
+        {tokens.map((k, i) => (
+          <>
+            <span class="w">
+              <span class:list={['w__in', k.em && 'grad-text']} style={`--i:${i}`}>
+                {k.t}
+              </span>
+            </span>{' '}
+          </>
+        ))}
+      </h1>
+      <p class="hero__lead">{hero.lead}</p>
+      <div class="hero__cta">
+        <a
+          class="btn btn--primary"
+          href={href(cta.primaryHref)}
+          data-magnetic
+          data-track="cta_click"
+          data-track-where="hero"
+        >
+          {cta.primary} <Icon name="arrow" class="arrow" />
+        </a>
+        <a class="btn btn--ghost" href={href(cta.secondaryHref)} data-magnetic>
+          {cta.secondary}
+        </a>
+      </div>
+      <p class="hero__note">
+        <Icon name="check" size={16} /> {hero.note}
+      </p>
+    </div>
+
+    <div class="hero__visual" aria-hidden="true">
+      <div class="win" data-tilt>
+        <span class="win__glare"></span>
+        <div class="win__bar">
+          <i></i>
+          <i></i>
+          <i></i>
+          <b>vetrina.studio</b>
+        </div>
+        <div class="tile tile--site glass" data-parallax="-0.05">
+          <ConceptArt work={w1} ratio="16 / 10" animated={false} label={false} />
+        </div>
+        <div class="tile tile--post glass" data-parallax="0.09">
+          <ConceptArt work={w2} ratio="4 / 5" animated={false} label={false} />
+        </div>
+        <div class="tile tile--doc glass" data-parallax="0.14">
+          <ConceptArt work={w3} ratio="3 / 4" animated={false} label={false} />
+        </div>
+        <div class="chip chip--1 glass">
+          <Icon name="spark" size={16} /> Tutarlı görünüm
+        </div>
+        <div class="chip chip--2 glass">
+          <span class="dot-live"></span> Mini analiz hazır
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <a class="hero__scroll" href="#guven" aria-label="Aşağı kaydır">
+    <span></span>
+  </a>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: min(100svh, 62rem);
+    padding: calc(var(--header-h) + clamp(2rem, 6vw, 5rem)) 0 clamp(4rem, 8vw, 7rem);
+    display: grid;
+    align-items: center;
+    overflow: clip;
+  }
+  .hero__bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    will-change: transform;
+  }
+  .orb--a {
+    width: 62vmax;
+    height: 62vmax;
+    left: -22vmax;
+    top: -26vmax;
+    background: radial-gradient(circle at 40% 40%, var(--glow-a), transparent 62%);
+    animation: float-a 22s ease-in-out infinite alternate;
+  }
+  .orb--b {
+    width: 56vmax;
+    height: 56vmax;
+    right: -24vmax;
+    top: -6vmax;
+    background: radial-gradient(circle at 50% 50%, var(--glow-b), transparent 62%);
+    animation: float-b 26s ease-in-out infinite alternate;
+  }
+  .orb--c {
+    width: 40vmax;
+    height: 40vmax;
+    left: 30%;
+    bottom: -26vmax;
+    background: radial-gradient(circle at 50% 50%, var(--glow-c), transparent 64%);
+    animation: float-a 30s ease-in-out infinite alternate-reverse;
+  }
+  @keyframes float-a {
+    to {
+      transform: translate3d(8vmax, 6vmax, 0) scale(1.1);
+    }
+  }
+  @keyframes float-b {
+    to {
+      transform: translate3d(-9vmax, 8vmax, 0) scale(1.08);
+    }
+  }
+  .hero__grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 72px 72px;
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 20%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 20%, transparent 75%);
+    opacity: 0.55;
+  }
+  .hero__beam {
+    position: absolute;
+    top: -20%;
+    left: 52%;
+    width: 28vmax;
+    height: 140%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.07), transparent);
+    transform: rotate(18deg);
+    animation: beam 9s ease-in-out infinite alternate;
+  }
+  @keyframes beam {
+    to {
+      transform: translateX(-14vmax) rotate(18deg);
+    }
+  }
+  .hero__spot {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 34rem;
+    height: 34rem;
+    margin: -17rem 0 0 -17rem;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--glow-a), transparent 65%);
+    opacity: 0;
+    transition: opacity 0.6s;
+    transform: translate3d(var(--sx, 50vw), var(--sy, 30vh), 0);
+    pointer-events: none;
+  }
+  .hero.is-pointer .hero__spot {
+    opacity: 0.35;
+  }
+
+  .hero__in {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: center;
+  }
+  .hero__eyebrow {
+    margin-bottom: var(--sp-5);
+  }
+  .hero__title {
+    font-size: var(--fs-hero);
+    line-height: 0.98;
+    letter-spacing: -0.04em;
+    font-weight: 800;
+  }
+  .w {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: top;
+    padding-bottom: 0.12em;
+    margin-bottom: -0.12em;
+  }
+  .w__in {
+    display: inline-block;
+    transform: translateY(105%) rotate(4deg);
+    transform-origin: 0 100%;
+    animation: word 0.95s var(--ease-out) forwards;
+    animation-delay: calc(0.05s + var(--i) * 0.07s);
+  }
+  @keyframes word {
+    to {
+      transform: none;
+    }
+  }
+  .hero__lead {
+    margin-top: var(--sp-5);
+    font-size: var(--fs-lg);
+    color: var(--text-muted);
+    max-width: 36rem;
+    animation: rise 0.9s var(--ease-out) 0.2s both;
+  }
+  .hero__cta {
+    margin-top: var(--sp-6);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-3);
+    animation: rise 0.9s var(--ease-out) 0.3s both;
+  }
+  .hero__note {
+    margin-top: var(--sp-5);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+    animation: rise 0.9s var(--ease-out) 0.4s both;
+  }
+  .hero__note :global(svg) {
+    color: var(--c-mint);
+  }
+  :global([data-theme='light']) .hero__note :global(svg) {
+    color: #0a8a5b;
+  }
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes rise {
+    from {
+      transform: translateY(22px);
+    }
+    to {
+      transform: none;
+    }
+  }
+
+  /* Vitrin görseli */
+  .hero__visual {
+    perspective: 1400px;
+    opacity: 0;
+    animation: fade-up 1.1s var(--ease-out) 0.5s forwards;
+  }
+  .win {
+    position: relative;
+    aspect-ratio: 1 / 1.05;
+    border-radius: var(--r-xl);
+    border: 1px solid var(--glass-border);
+    background: linear-gradient(
+      160deg,
+      color-mix(in srgb, var(--bg-elev) 80%, transparent),
+      color-mix(in srgb, var(--bg-deep) 60%, transparent)
+    );
+    box-shadow:
+      var(--shadow),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    transform-style: preserve-3d;
+    transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+    transition: transform 0.4s var(--ease-out);
+    overflow: hidden;
+  }
+  .win__glare {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    pointer-events: none;
+    background: linear-gradient(
+      115deg,
+      transparent 30%,
+      rgba(255, 255, 255, 0.14) 45%,
+      transparent 60%
+    );
+    transform: translateX(-60%);
+    animation: glare 7s ease-in-out 1.6s infinite;
+  }
+  @keyframes glare {
+    0%,
+    55% {
+      transform: translateX(-70%);
+    }
+    100% {
+      transform: translateX(80%);
+    }
+  }
+  .win__bar {
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 14px;
+    border-bottom: 1px solid var(--line);
+    z-index: 4;
+    background: color-mix(in srgb, var(--bg-deep) 50%, transparent);
+  }
+  .win__bar i {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--line);
+  }
+  .win__bar i:first-child {
+    background: var(--c-coral);
+  }
+  .win__bar i:nth-child(2) {
+    background: var(--c-amber);
+  }
+  .win__bar i:nth-child(3) {
+    background: var(--c-mint);
+  }
+  .win__bar b {
+    margin-left: 10px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    font-family: var(--font-body);
+  }
+  .tile {
+    position: absolute;
+    padding: 0;
+    overflow: hidden;
+    border-radius: var(--r-md);
+  }
+  .tile :global(.art) {
+    border-radius: var(--r-md);
+  }
+  .tile--site {
+    left: 7%;
+    top: 14%;
+    width: 66%;
+    animation: bob 7s ease-in-out infinite alternate;
+  }
+  .tile--post {
+    right: 6%;
+    top: 30%;
+    width: 38%;
+    animation: bob 8s ease-in-out -2s infinite alternate-reverse;
+    z-index: 2;
+  }
+  .tile--doc {
+    left: 16%;
+    bottom: 7%;
+    width: 34%;
+    animation: bob 9s ease-in-out -4s infinite alternate;
+    z-index: 3;
+  }
+  @keyframes bob {
+    to {
+      translate: 0 -10px;
+    }
+  }
+  .chip {
+    position: absolute;
+    z-index: 6;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.5rem 0.9rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    border-radius: var(--r-pill);
+    background: var(--glass-strong);
+  }
+  .chip--1 {
+    right: 7%;
+    top: 11%;
+    color: var(--accent);
+  }
+  .chip--2 {
+    right: 10%;
+    bottom: 10%;
+  }
+  .dot-live {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--c-mint);
+    box-shadow: 0 0 0 0 var(--c-mint);
+    animation: live 2s infinite;
+  }
+  @keyframes live {
+    70% {
+      box-shadow: 0 0 0 8px transparent;
+    }
+    100% {
+      box-shadow: 0 0 0 0 transparent;
+    }
+  }
+
+  .hero__scroll {
+    position: absolute;
+    left: 50%;
+    bottom: 1.2rem;
+    z-index: 2;
+    width: 26px;
+    height: 42px;
+    margin-left: -13px;
+    border: 2px solid var(--glass-border);
+    border-radius: 14px;
+    display: none;
+  }
+  .hero__scroll span {
+    position: absolute;
+    left: 50%;
+    top: 7px;
+    width: 4px;
+    height: 8px;
+    margin-left: -2px;
+    border-radius: 2px;
+    background: var(--warm);
+    animation: scroll-dot 1.8s ease-in-out infinite;
+  }
+  @keyframes scroll-dot {
+    0% {
+      opacity: 0;
+      transform: translateY(0);
+    }
+    40% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+  }
+  @media (min-width: 1100px) and (min-height: 760px) {
+    .hero__scroll {
+      display: block;
+    }
+  }
+
+  @media (max-width: 960px) {
+    .hero {
+      min-height: 0;
+    }
+    .hero__in {
+      grid-template-columns: 1fr;
+    }
+    .hero__visual {
+      max-width: 30rem;
+      margin-inline: auto;
+      width: 100%;
+    }
+    .hero__beam,
+    .hero__spot {
+      display: none;
+    }
+  }
+  @media (max-width: 560px) {
+    .orb {
+      animation-duration: 40s;
+    }
+    .hero__title {
+      letter-spacing: -0.035em;
+    }
+    .hero__cta .btn {
+      width: 100%;
+    }
+    .win {
+      aspect-ratio: 1 / 1.12;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .w__in,
+    .hero__lead,
+    .hero__cta,
+    .hero__note,
+    .hero__visual {
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+    .orb,
+    .hero__beam,
+    .win__glare,
+    .tile {
+      animation: none !important;
+    }
+  }
+</style>

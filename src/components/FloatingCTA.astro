@@ -1,0 +1,146 @@
+---
+import { cta } from '@content/site';
+import { href, waLink, waIsLive } from '@lib/url';
+import Icon from './Icon.astro';
+const wa = waLink();
+const live = waIsLive();
+---
+
+<aside aria-label="Hızlı iletişim">
+  <!-- Masaüstü: sabit WhatsApp butonu -->
+  {live && (
+    <a
+      class="wa-fab"
+      href={wa}
+      target="_blank"
+      rel="noopener"
+      data-track="whatsapp_click"
+      data-track-where="fab"
+      aria-label="WhatsApp ile yazın"
+    >
+      <Icon name="whatsapp" size={28} />
+      <span class="wa-fab__tip">Hızlı soru? WhatsApp</span>
+    </a>
+  )}
+
+  <!-- Mobil: alt çubuk -->
+  <div class="dock" data-dock>
+    <a
+      class="btn btn--primary"
+      href={href(cta.primaryHref)}
+      data-track="cta_click"
+      data-track-where="dock"
+    >
+      {cta.primary}
+    </a>
+    {live && (
+      <a
+        class="btn btn--wa dock__wa"
+        href={wa}
+        target="_blank"
+        rel="noopener"
+        data-track="whatsapp_click"
+        data-track-where="dock"
+        aria-label="WhatsApp"
+      >
+        <Icon name="whatsapp" size={24} />
+      </a>
+    )}
+  </div>
+</aside>
+
+<style>
+  .wa-fab {
+    position: fixed;
+    right: clamp(1rem, 2.5vw, 2rem);
+    bottom: clamp(1rem, 2.5vw, 2rem);
+    z-index: var(--z-float);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: #1faa59;
+    color: #04210f;
+    box-shadow: 0 14px 34px -8px rgba(31, 170, 89, 0.65);
+    transition: transform var(--dur-2) var(--ease-out);
+  }
+  .wa-fab:hover {
+    transform: scale(1.08) rotate(-6deg);
+  }
+  .wa-fab::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 2px solid #1faa59;
+    animation: ping 2.6s var(--ease-out) infinite;
+  }
+  .wa-fab__tip {
+    position: absolute;
+    right: 72px;
+    white-space: nowrap;
+    background: var(--glass-strong);
+    border: 1px solid var(--glass-border);
+    color: var(--text);
+    padding: 0.45rem 0.8rem;
+    border-radius: var(--r-pill);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    opacity: 0;
+    transform: translateX(8px);
+    pointer-events: none;
+    transition: all var(--dur-2) var(--ease-out);
+  }
+  .wa-fab:hover .wa-fab__tip,
+  .wa-fab:focus-visible .wa-fab__tip {
+    opacity: 1;
+    transform: none;
+  }
+  @keyframes ping {
+    0% {
+      transform: scale(1);
+      opacity: 0.7;
+    }
+    80%,
+    100% {
+      transform: scale(1.7);
+      opacity: 0;
+    }
+  }
+  .dock {
+    display: none;
+  }
+  @media (max-width: 720px) {
+    .wa-fab {
+      display: none;
+    }
+    .dock {
+      display: flex;
+      gap: var(--sp-2);
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: var(--z-float);
+      padding: 0.6rem var(--gutter) calc(0.6rem + env(safe-area-inset-bottom));
+      background: color-mix(in srgb, var(--bg) 86%, transparent);
+      -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(16px);
+      border-top: 1px solid var(--line);
+      transition: transform var(--dur-2) var(--ease-out);
+    }
+    .dock.is-hidden {
+      transform: translateY(110%);
+    }
+    .dock .btn:first-child {
+      flex: 1;
+      min-height: 50px;
+    }
+    .dock__wa {
+      width: 54px;
+      padding: 0;
+      flex: none;
+    }
+  }
+</style>

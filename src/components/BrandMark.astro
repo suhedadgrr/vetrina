@@ -1,0 +1,22 @@
+---
+interface Props {
+  size?: number;
+}
+const { size = 56 } = Astro.props;
+---
+
+<svg viewBox="0 0 64 64" width={size} height={size} aria-hidden="true">
+  <defs>
+    <linearGradient id="bml" x1="4" y1="8" x2="32" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#A196FF" />
+      <stop offset="1" stop-color="#5A48F5" />
+    </linearGradient>
+    <linearGradient id="bmr" x1="60" y1="8" x2="32" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#6EA0FF" />
+      <stop offset="1" stop-color="#2458EE" />
+    </linearGradient>
+  </defs>
+  <path fill="url(#bml)" d="M4 8H22L32 36V56H23Z" />
+  <path fill="url(#bmr)" d="M32 36 42 8H45.5L52.2 28.6 41 56H32Z" />
+  <path fill="#FFB84D" d="M45.5 8H60L52.2 28.6Z" />
+</svg>

@@ -1,0 +1,38 @@
+---
+import Base from './Base.astro';
+import { legal } from '@content/site';
+import { href } from '@lib/url';
+interface Props {
+  title: string;
+  path: string;
+  description: string;
+}
+const { title, path, description } = Astro.props;
+---
+
+<Base title={title} description={description} path={path} og="home">
+  <section class="page-hero">
+    <div class="container">
+      <nav class="breadcrumb" aria-label="Sayfa yolu">
+        <a href={href('/')}>Ana sayfa</a> / <span aria-current="page">{title}</span>
+      </nav>
+      <h1>{title}</h1>
+      <p class="lead">Son güncelleme: {legal.lastUpdated}</p>
+    </div>
+  </section>
+  <section class="section--tight">
+    <div class="container">
+      <div class="prose">
+        <slot />
+      </div>
+    </div>
+  </section>
+</Base>
+<style>
+  .draftnote {
+    border-left: 3px solid var(--warm);
+    padding: 0.6rem 1rem;
+    background: var(--glass);
+    border-radius: 0 var(--r-sm) var(--r-sm) 0;
+  }
+</style>

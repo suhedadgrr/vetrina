@@ -1,0 +1,88 @@
+---
+import Base from '@layouts/Base.astro';
+import { posts } from '@content/blog';
+import { href } from '@lib/url';
+---
+
+<Base
+  title="Blog"
+  description="Vetrina blog: B2B marka iletişimi, sosyal medya ve web üzerine kısa, uygulanabilir yazılar. Yakında."
+  path="/blog/"
+  og="blog"
+>
+  <section class="page-hero">
+    <div class="container">
+      <nav class="breadcrumb" aria-label="Sayfa yolu">
+        <a href={href('/')}>Ana sayfa</a> / <span aria-current="page">Blog</span>
+      </nav>
+      <p class="eyebrow">Blog</p>
+      <h1>Kısa, uygulanabilir yazılar</h1>
+      <p class="lead">
+        B2B markalar için marka, sosyal medya ve web notları. İlk yazılar yakında; hazırlanan
+        konular aşağıda.
+      </p>
+    </div>
+  </section>
+  <section class="section--tight">
+    <div class="container">
+      <ul class="posts">
+        {posts.map((p) => (
+          <li class="glass post reveal">
+            <p class="tag">
+              {p.tag} {p.draft && <span class="draft">Yakında</span>}
+            </p>
+            <h2>{p.title}</h2>
+            <p>{p.excerpt.replace('[Taslak] ', '')}</p>
+            {!p.draft && <p class="date">{p.date}</p>}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</Base>
+<style>
+  .posts {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--sp-4);
+  }
+  .post {
+    padding: clamp(1.3rem, 3vw, 2rem);
+    display: grid;
+    gap: var(--sp-3);
+    align-content: start;
+  }
+  .tag {
+    font-size: var(--fs-xs);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .draft {
+    color: var(--warm);
+    border: 1px solid currentColor;
+    border-radius: var(--r-pill);
+    padding: 0.1rem 0.6rem;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  .post h2 {
+    font-size: var(--fs-xl);
+  }
+  .post p {
+    color: var(--text-muted);
+  }
+  .date {
+    font-size: var(--fs-sm);
+  }
+  @media (max-width: 900px) {
+    .posts {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

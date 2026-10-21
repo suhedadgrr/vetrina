@@ -1,0 +1,41 @@
+---
+import Base from '@layouts/Base.astro';
+import { href } from '@lib/url';
+---
+
+<Base
+  title="Sayfa bulunamadı"
+  description="Aradığınız sayfa bulunamadı."
+  path="/404/"
+  og="home"
+  noindex
+>
+  <section class="page-hero nf">
+    <div class="container">
+      <p class="eyebrow">404</p>
+      <h1>Bu vitrin boş görünüyor.</h1>
+      <p class="lead">Aradığınız sayfa taşınmış ya da hiç var olmamış olabilir.</p>
+      <p class="actions">
+        <a class="btn btn--primary" href={href('/')}>
+          Ana sayfaya dön
+        </a>{' '}
+        <a class="btn btn--ghost" href={href('/#iletisim')}>
+          Mini analiz iste
+        </a>
+      </p>
+    </div>
+  </section>
+</Base>
+<style>
+  .nf {
+    min-height: 70vh;
+    display: grid;
+    align-content: center;
+  }
+  .actions {
+    margin-top: var(--sp-6);
+    display: flex;
+    gap: var(--sp-3);
+    flex-wrap: wrap;
+  }
+</style>

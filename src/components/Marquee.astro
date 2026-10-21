@@ -1,0 +1,92 @@
+---
+interface Props {
+  items: string[];
+  reverse?: boolean;
+  label?: string;
+}
+const { items, reverse = false, label = 'Hizmet alanlarımız' } = Astro.props;
+---
+
+<div class="marquee" role="group" aria-label={label}>
+  <div class:list={['marquee__track', reverse && 'is-rev']}>
+    {[0, 1].map((n) => (
+      <ul class="marquee__list" aria-hidden={n === 1 ? 'true' : undefined}>
+        {items.map((t) => (
+          <li>
+            <span>{t}</span>
+            <i aria-hidden="true">✦</i>
+          </li>
+        ))}
+      </ul>
+    ))}
+  </div>
+</div>
+
+<style>
+  .marquee {
+    overflow: hidden;
+    border-block: 1px solid var(--line);
+    padding: clamp(0.9rem, 2vw, 1.4rem) 0;
+    background: color-mix(in srgb, var(--bg-deep) 60%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+  .marquee__track {
+    display: flex;
+    width: max-content;
+    animation: slide 38s linear infinite;
+  }
+  .marquee__track.is-rev {
+    animation-direction: reverse;
+  }
+  .marquee:hover .marquee__track {
+    animation-play-state: paused;
+  }
+  .marquee__list {
+    display: flex;
+    flex: none;
+    align-items: center;
+  }
+  .marquee__list li {
+    display: flex;
+    align-items: center;
+    gap: clamp(1.2rem, 3vw, 2.4rem);
+    padding-right: clamp(1.2rem, 3vw, 2.4rem);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.4rem, 1rem + 2vw, 2.6rem);
+    letter-spacing: -0.03em;
+    white-space: nowrap;
+  }
+  .marquee__list li span {
+    color: var(--text);
+  }
+  .marquee__list li:nth-child(even) span {
+    -webkit-text-stroke: 1.2px var(--text-muted);
+    color: transparent;
+  }
+  .marquee__list i {
+    color: var(--warm);
+    font-style: normal;
+    font-size: 0.7em;
+  }
+  @keyframes slide {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .marquee__track {
+      animation: none;
+      flex-wrap: wrap;
+      width: auto;
+    }
+    .marquee__list[aria-hidden] {
+      display: none;
+    }
+    .marquee {
+      mask-image: none;
+      -webkit-mask-image: none;
+    }
+  }
+</style>

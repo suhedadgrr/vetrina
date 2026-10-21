@@ -1,0 +1,36 @@
+---
+/** Üretim şablonları için çıplak layout: OG görselleri, Instagram paylaşım görselleri, PDF, showreel. */
+import '../styles/global.css';
+interface Props {
+  title: string;
+  width: number;
+  height: number;
+}
+const { title, width, height } = Astro.props;
+---
+
+<!doctype html>
+<html lang="tr" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content={`width=${width}`} />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>{title}</title>
+    <style is:global define:vars={{ w: `${width}px`, h: `${height}px` }}>
+      html,
+      body {
+        margin: 0;
+        width: var(--w);
+        height: var(--h);
+        overflow: hidden;
+        background: var(--bg);
+      }
+      body::before {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

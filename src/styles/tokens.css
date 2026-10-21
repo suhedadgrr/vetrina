@@ -1,0 +1,113 @@
+/* ==========================================================================
+   VETRINA — Tasarım token'ları (tek kaynak). Renk, tipografi, boşluk, hareket.
+   ========================================================================== */
+:root {
+  /* Marka paleti (ham değerler) */
+  --c-ink-950: #060a1c;
+  --c-ink-900: #0a0f2c; /* koyu lacivert */
+  --c-ink-800: #111842;
+  --c-ink-700: #1b2459;
+  --c-violet: #6c5cff; /* canlı mor */
+  --c-violet-600: #5a48f5;
+  --c-blue: #2f6bff; /* elektrik mavi */
+  --c-blue-600: #2458ee;
+  --c-amber: #ffb84d; /* sıcak vurgu */
+  --c-coral: #ff8fa3;
+  --c-mint: #7cf2c4;
+
+  /* Tipografi */
+  --font-display: 'Bricolage Grotesque Variable', 'Bricolage Grotesque', system-ui, sans-serif;
+  --font-body: 'Inter Variable', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --fs-xs: clamp(0.75rem, 0.72rem + 0.15vw, 0.8125rem);
+  --fs-sm: clamp(0.875rem, 0.85rem + 0.15vw, 0.9375rem);
+  --fs-base: clamp(1rem, 0.96rem + 0.2vw, 1.0625rem);
+  --fs-lg: clamp(1.125rem, 1.05rem + 0.35vw, 1.3125rem);
+  --fs-xl: clamp(1.375rem, 1.2rem + 0.8vw, 1.875rem);
+  --fs-2xl: clamp(1.75rem, 1.35rem + 1.8vw, 2.75rem);
+  --fs-3xl: clamp(2.25rem, 1.5rem + 3.4vw, 4.25rem);
+  --fs-hero: clamp(2.6rem, 1.35rem + 6.2vw, 6.25rem);
+
+  /* Boşluk */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.5rem;
+  --sp-6: 2rem;
+  --sp-7: 3rem;
+  --sp-8: 4.5rem;
+  --sp-9: 7rem;
+  --gutter: clamp(1rem, 4vw, 2rem);
+  --section-y: clamp(4.5rem, 4rem + 7vw, 9rem);
+  --container: 1200px;
+
+  /* Şekil */
+  --r-sm: 10px;
+  --r-md: 16px;
+  --r-lg: 24px;
+  --r-xl: 32px;
+  --r-pill: 999px;
+
+  /* Hareket */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-1: 160ms;
+  --dur-2: 320ms;
+  --dur-3: 720ms;
+
+  --header-h: 72px;
+  --z-header: 50;
+  --z-float: 60;
+  --z-modal: 100;
+  --z-cursor: 200;
+}
+
+/* ---- Koyu tema (varsayılan) ---- */
+:root,
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: var(--c-ink-900);
+  --bg-deep: var(--c-ink-950);
+  --bg-elev: #131a47;
+  --text: #f3f5ff;
+  --text-muted: #b3bae0; /* ink-900 üzerinde ≈ 9:1 */
+  --line: rgba(160, 175, 255, 0.18);
+  --glass: rgba(24, 32, 90, 0.42);
+  --glass-strong: rgba(24, 32, 90, 0.72);
+  --glass-border: rgba(180, 190, 255, 0.2);
+  --accent: #9a8fff; /* metin olarak kullanılan mor (≥ 6:1) */
+  --accent-2: #6ea0ff;
+  --warm: var(--c-amber);
+  --btn-from: var(--c-violet-600);
+  --btn-to: var(--c-blue-600);
+  --btn-text: #ffffff;
+  --glow-a: rgba(108, 92, 255, 0.55);
+  --glow-b: rgba(47, 107, 255, 0.45);
+  --glow-c: rgba(255, 184, 77, 0.22);
+  --shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.7);
+  --grain-opacity: 0.07;
+  --focus: #ffd58a;
+}
+
+/* ---- Açık tema ---- */
+:root[data-theme='light'] {
+  color-scheme: light;
+  --bg: #f6f7fd;
+  --bg-deep: #eceefb;
+  --bg-elev: #ffffff;
+  --text: #0a0f2c;
+  --text-muted: #474e75; /* #f6f7fd üzerinde ≈ 7:1 */
+  --line: rgba(10, 15, 44, 0.12);
+  --glass: rgba(255, 255, 255, 0.62);
+  --glass-strong: rgba(255, 255, 255, 0.86);
+  --glass-border: rgba(10, 15, 44, 0.1);
+  --accent: #4b3bd9;
+  --accent-2: #1f4fd6;
+  --warm: #985400;
+  --glow-a: rgba(108, 92, 255, 0.28);
+  --glow-b: rgba(47, 107, 255, 0.22);
+  --glow-c: rgba(255, 184, 77, 0.3);
+  --shadow: 0 30px 70px -35px rgba(30, 40, 120, 0.35);
+  --grain-opacity: 0.05;
+  --focus: #3b2fd0;
+}

@@ -1,0 +1,114 @@
+---
+import { instagramBlock as ig, social, isPlaceholder } from '@content/site';
+import { works } from '@content/work';
+import Icon from './Icon.astro';
+import ConceptArt from './ConceptArt.astro';
+const live = !isPlaceholder(social.instagram.url);
+const cells = ig.tiles.map((t, i) => ({ ...t, work: works[i % works.length] }));
+---
+
+{live && (
+  <section class="section--tight ig" id="instagram" aria-labelledby="ig-title">
+    <div class="container">
+      <div class="ig__head reveal">
+        <div>
+          <p class="eyebrow">Sosyal</p>
+          <h2 id="ig-title">{ig.title}</h2>
+          <p>{ig.text}</p>
+        </div>
+        {live && (
+          <a
+            class="btn btn--ghost"
+            href={social.instagram.url}
+            target="_blank"
+            rel="noopener me"
+            data-track="social_click"
+            data-track-where="instagram"
+          >
+            <Icon name="social" /> {social.instagram.handle}
+          </a>
+        )}
+      </div>
+      <ul class="ig__grid" aria-label="Instagram gönderi önizlemeleri (kurgusal)">
+        {cells.map((c, i) => (
+          <li class="ig__cell reveal" style={`--i:${i}`}>
+            <div class="ig__art">
+              <ConceptArt work={c.work} ratio="1 / 1" animated={false} label={false} />
+            </div>
+            <div class="ig__over">
+              <span>{c.text}</span>
+            </div>
+          </li>
+        ))}
+      </ul>
+      <p class="ig__note">
+        Bu kareler, tarzımızı göstermek için hazırladığımız kurgusal örnek çalışmalardır.
+      </p>
+    </div>
+  </section>
+)}
+
+<style>
+  .ig__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: var(--sp-5);
+    flex-wrap: wrap;
+    margin-bottom: var(--sp-5);
+  }
+  .ig__head h2 {
+    font-size: var(--fs-2xl);
+    margin: var(--sp-2) 0;
+  }
+  .ig__head p:not(.eyebrow) {
+    color: var(--text-muted);
+    max-width: 34rem;
+  }
+  .ig__grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: var(--sp-3);
+  }
+  .ig__cell {
+    position: relative;
+    border-radius: var(--r-md);
+    overflow: hidden;
+    aspect-ratio: 1;
+  }
+  .ig__art,
+  .ig__art :global(.art) {
+    height: 100%;
+  }
+  .ig__over {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: end start;
+    padding: 0.7rem;
+    background: linear-gradient(transparent 40%, rgba(5, 8, 24, 0.85));
+    color: #fff;
+    font-size: 0.78rem;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+  .ig__note {
+    margin-top: var(--sp-4);
+    font-size: var(--fs-xs);
+    color: var(--text-muted);
+  }
+  .ph-note {
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+  }
+  @media (max-width: 900px) {
+    .ig__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  @media (max-width: 480px) {
+    .ig__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>

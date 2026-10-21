@@ -1,0 +1,147 @@
+---
+import { packages } from '@content/packages';
+import { href } from '@lib/url';
+import Icon from './Icon.astro';
+---
+
+<section class="section" id="paketler" aria-labelledby="paketler-title">
+  <div class="container">
+    <header class="section-head">
+      <p class="eyebrow reveal">Paketler</p>
+      <h2 id="paketler-title" class="reveal" style="--i:1">
+        İhtiyacınıza göre <span class="grad-text">üç başlangıç noktası</span>.
+      </h2>
+      <p class="reveal" style="--i:2">
+        Fiyatı herkese aynı vermiyoruz çünkü ihtiyaçlar aynı değil. Mini analizden sonra kalemleri
+        ayrıştırılmış, net bir teklif alırsınız.
+      </p>
+    </header>
+
+    <ul class="pkg-grid">
+      {packages.map((p, i) => (
+        <li class:list={['pkg glass reveal', p.highlight && 'pkg--hl']} style={`--i:${i}`}>
+          {p.highlight && <span class="pkg__ribbon">En çok tercih edilen</span>}
+          <p class="pkg__tag">{p.tag}</p>
+          <h3>{p.name}</h3>
+          <p class="pkg__for">{p.for}</p>
+          <ul class="pkg__list">
+            {p.features.map((f) => (
+              <li>
+                <Icon name="check" size={18} /> <span>{f}</span>
+              </li>
+            ))}
+          </ul>
+          <a
+            class:list={['btn', p.highlight ? 'btn--primary' : 'btn--ghost']}
+            href={href('/#iletisim')}
+            data-magnetic
+            data-track="package_quote"
+            data-track-where={p.id}
+            data-prefill={`Paket: ${p.name}`}
+          >
+            {p.cta} <Icon name="arrow" class="arrow" />
+          </a>
+        </li>
+      ))}
+    </ul>
+    <p class="pkg__note reveal">
+      Paket içerikleri örnektir; kapsamı birlikte, işinize göre şekillendiririz. Pilot Programı’na
+      dahil ilk 5 müşteriye indirim uygulanır.
+    </p>
+  </div>
+</section>
+
+<style>
+  .pkg-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--sp-4);
+    align-items: stretch;
+  }
+  .pkg {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+    padding: clamp(1.4rem, 3vw, 2.2rem);
+  }
+  .pkg--hl {
+    border-color: transparent;
+    background:
+      linear-gradient(var(--bg-elev), var(--bg-elev)) padding-box,
+      linear-gradient(140deg, var(--c-violet), var(--c-blue), var(--c-amber)) border-box;
+    border: 1.5px solid transparent;
+    transform: translateY(-10px);
+  }
+  :global(.js) .pkg--hl.reveal.is-in {
+    transform: translateY(-10px);
+  }
+  .pkg__ribbon {
+    position: absolute;
+    top: -0.9rem;
+    left: 1.4rem;
+    padding: 0.3rem 0.9rem;
+    border-radius: var(--r-pill);
+    font-size: 0.75rem;
+    font-weight: 800;
+    background: #ffb84d;
+    color: #231500;
+  }
+  .pkg__tag {
+    font-size: var(--fs-xs);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .pkg h3 {
+    font-size: var(--fs-2xl);
+  }
+  .pkg__for {
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+    min-height: 2.8em;
+  }
+  .pkg__list {
+    display: grid;
+    gap: 0.7rem;
+    margin: var(--sp-3) 0 var(--sp-5);
+    flex: 1;
+  }
+  .pkg__list li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.6rem;
+    font-size: var(--fs-sm);
+  }
+  .pkg__list :global(svg) {
+    color: var(--c-mint);
+    margin-top: 0.15rem;
+  }
+  :global([data-theme='light']) .pkg__list :global(svg) {
+    color: #0a8a5b;
+  }
+  .pkg .btn {
+    width: 100%;
+  }
+  .pkg__note {
+    margin-top: var(--sp-5);
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+    text-align: center;
+  }
+  @media (max-width: 960px) {
+    .pkg-grid {
+      grid-template-columns: 1fr;
+      max-width: 34rem;
+      margin-inline: auto;
+    }
+    .pkg--hl,
+    :global(.js) .pkg--hl.reveal.is-in {
+      transform: none;
+    }
+    .pkg__for {
+      min-height: 0;
+    }
+  }
+</style>

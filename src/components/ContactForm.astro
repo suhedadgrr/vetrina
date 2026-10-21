@@ -1,0 +1,510 @@
+---
+import { services } from '@content/services';
+import { contact, isPlaceholder, pilot } from '@content/site';
+import { href, waLink, waIsLive, telLink, telIsLive } from '@lib/url';
+import Icon from './Icon.astro';
+
+const key = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? '';
+const sitekey = import.meta.env.PUBLIC_TURNSTILE_SITEKEY ?? '';
+const options = [...services.map((s) => s.title), 'Birden fazla / emin değilim'];
+---
+
+<section class="section contact" id="iletisim" aria-labelledby="iletisim-title">
+  <div class="contact__bg" aria-hidden="true"></div>
+  <div class="container contact__grid">
+    <div class="contact__copy">
+      <p class="eyebrow reveal">Ücretsiz Mini Analiz</p>
+      <h2 id="iletisim-title" class="reveal" style="--i:1">
+        Vitrininizi birlikte <span class="grad-text">gözden geçirelim</span>.
+      </h2>
+      <p class="contact__lead reveal" style="--i:2">
+        Formu doldurun; Instagram hesabınızı ve/veya sitenizi inceleyip 2 iş günü içinde yazılı bir
+        mini analiz gönderelim. Taahhüt yok.
+      </p>
+
+      <ul class="gets reveal" style="--i:3">
+        <li>
+          <Icon name="check" size={20} /> Profil/site için 3 öncelikli iyileştirme önerisi
+        </li>
+        <li>
+          <Icon name="check" size={20} /> Rakiplerinize göre kısa görsel konumlandırma notu
+        </li>
+        <li>
+          <Icon name="check" size={20} /> Size uygun başlangıç paketi tavsiyesi
+        </li>
+        <li>
+          <Icon name="check" size={20} /> {pilot.badge}: ilk 5 müşteriye indirim
+        </li>
+      </ul>
+
+      <div class="chans reveal" style="--i:4">
+        <p class="chans__t">Ya da doğrudan yazın:</p>
+        <div class="chans__row">
+          {!isPlaceholder(contact.email) && (
+            <a
+              class="btn btn--ghost btn--sm"
+              href={`mailto:${contact.email}`}
+              data-track="email_click"
+              data-track-where="contact"
+            >
+              <Icon name="mail" size={18} /> {contact.email}
+            </a>
+          )}
+          {waIsLive() && (
+            <a
+              class="btn btn--wa btn--sm"
+              href={waLink()}
+              target="_blank"
+              rel="noopener"
+              data-track="whatsapp_click"
+              data-track-where="contact"
+            >
+              <Icon name="whatsapp" size={20} /> WhatsApp
+            </a>
+          )}
+          {telIsLive() && (
+            <a
+              class="btn btn--ghost btn--sm"
+              href={telLink()}
+              data-track="phone_click"
+              data-track-where="contact"
+            >
+              <Icon name="phone" size={18} /> Ara
+            </a>
+          )}
+        </div>
+      </div>
+    </div>
+
+    <div class="contact__card glass reveal reveal--scale" style="--i:2">
+      <form
+        class="form"
+        id="lead-form"
+        novalidate
+        data-form
+        data-subject="Yeni Mini Analiz Talebi — Vetrina"
+        data-redirect={href('/tesekkurler/')}
+        data-event="form_submit"
+        data-key={key}
+        data-sitekey={sitekey}
+        aria-describedby="form-status"
+      >
+        <div class="form__grid">
+          <div class="field">
+            <label for="f-ad">
+              Adınız soyadınız <span aria-hidden="true">*</span>
+            </label>
+            <input
+              id="f-ad"
+              name="name"
+              type="text"
+              autocomplete="name"
+              required
+              minlength="2"
+              placeholder="Ad Soyad"
+            />
+            <p class="field__err" data-err="f-ad" role="alert"></p>
+          </div>
+          <div class="field">
+            <label for="f-firma">
+              Firma / marka <span aria-hidden="true">*</span>
+            </label>
+            <input
+              id="f-firma"
+              name="company"
+              type="text"
+              autocomplete="organization"
+              required
+              placeholder="Firma adı"
+            />
+            <p class="field__err" data-err="f-firma" role="alert"></p>
+          </div>
+          <div class="field">
+            <label for="f-mail">
+              E-posta <span aria-hidden="true">*</span>
+            </label>
+            <input
+              id="f-mail"
+              name="email"
+              type="email"
+              autocomplete="email"
+              inputmode="email"
+              required
+              placeholder="ornek@firma.com"
+            />
+            <p class="field__err" data-err="f-mail" role="alert"></p>
+          </div>
+          <div class="field">
+            <label for="f-tel">
+              Telefon <span aria-hidden="true">*</span>
+            </label>
+            <input
+              id="f-tel"
+              name="phone"
+              type="tel"
+              autocomplete="tel"
+              inputmode="tel"
+              required
+              pattern="[0-9 +()\-]{10,20}"
+              placeholder="05XX XXX XX XX"
+            />
+            <p class="field__err" data-err="f-tel" role="alert"></p>
+          </div>
+          <div class="field field--full">
+            <label for="f-hizmet">
+              İlgilendiğiniz hizmet <span aria-hidden="true">*</span>
+            </label>
+            <select id="f-hizmet" name="service" required data-service-select>
+              <option value="" disabled selected>
+                Seçin…
+              </option>
+              {options.map((o) => (
+                <option value={o}>{o}</option>
+              ))}
+              <option value="Pilot Programı">Pilot Programı hakkında bilgi</option>
+            </select>
+            <p class="field__err" data-err="f-hizmet" role="alert"></p>
+          </div>
+          <div class="field field--full">
+            <label for="f-link">Instagram hesabınız veya web siteniz</label>
+            <input
+              id="f-link"
+              name="profile_url"
+              type="text"
+              inputmode="url"
+              autocomplete="url"
+              placeholder="@kullaniciadi veya https://siteniz.com"
+            />
+            <p class="field__hint">
+              Analizi bu bağlantı üzerinden yapacağız. Yoksa boş bırakabilirsiniz.
+            </p>
+          </div>
+          <div class="field field--full">
+            <label for="f-mesaj">Eklemek istediğiniz not</label>
+            <textarea
+              id="f-mesaj"
+              name="message"
+              rows="3"
+              placeholder="Hedefiniz, sorununuz veya sorunuz…"
+            ></textarea>
+          </div>
+        </div>
+
+        <!-- Spam: honeypot (insanlar görmez) -->
+        <div class="hp" aria-hidden="true">
+          <label>
+            Bu alanı boş bırakın{' '}
+            <input type="text" name="company_website" tabindex="-1" autocomplete="off" />
+          </label>
+          <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" />
+        </div>
+        <input type="hidden" name="subject" value="Yeni Mini Analiz Talebi — Vetrina" />
+        <input type="hidden" name="from_name" value="Vetrina Web Sitesi" />
+        <input type="hidden" name="utm" value="" data-utm />
+        <input type="hidden" name="page" value="" data-page />
+
+        <div class="field field--check">
+          <input id="f-kvkk" name="kvkk" type="checkbox" required />
+          <label for="f-kvkk">
+            <a href={href('/kvkk/')} target="_blank" rel="noopener">
+              KVKK Aydınlatma Metni
+            </a>
+            ’ni okudum; verilerimin benimle iletişim kurulması amacıyla işlenmesini kabul ediyorum.{' '}
+            <span aria-hidden="true">*</span>
+          </label>
+          <p class="field__err" data-err="f-kvkk" role="alert"></p>
+        </div>
+
+        <div class="turnstile" data-turnstile></div>
+
+        <button class="btn btn--primary form__submit" type="submit" data-submit>
+          <span class="form__label">Ücretsiz Mini Analiz İste</span>
+          <span class="form__spin" aria-hidden="true"></span>
+          <Icon name="arrow" class="arrow" />
+        </button>
+
+        <div
+          id="form-status"
+          class="form__status"
+          role="status"
+          aria-live="polite"
+          data-status
+        ></div>
+        <p class="form__fine">
+          Bilgileriniz yalnızca sizinle iletişim için kullanılır ve üçüncü kişilerle paylaşılmaz.
+        </p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact {
+    overflow: clip;
+  }
+  .contact__bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(60% 50% at 80% 10%, var(--glow-a), transparent 70%),
+      radial-gradient(50% 50% at 10% 90%, var(--glow-c), transparent 70%);
+    opacity: 0.6;
+    pointer-events: none;
+  }
+  .contact__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: start;
+  }
+  .contact__copy {
+    display: grid;
+    gap: var(--sp-4);
+    position: sticky;
+    top: calc(var(--header-h) + 2rem);
+  }
+  .contact__copy h2 {
+    font-size: var(--fs-3xl);
+  }
+  .contact__lead {
+    font-size: var(--fs-lg);
+    color: var(--text-muted);
+  }
+  .gets {
+    display: grid;
+    gap: 0.7rem;
+    margin-block: var(--sp-3);
+  }
+  .gets li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.7rem;
+    align-items: start;
+  }
+  .gets :global(svg) {
+    color: var(--c-mint);
+    margin-top: 0.15rem;
+  }
+  :global([data-theme='light']) .gets :global(svg) {
+    color: #0a8a5b;
+  }
+  .chans__t {
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+    margin-bottom: var(--sp-2);
+  }
+  .chans__row {
+    display: flex;
+    gap: var(--sp-2);
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .ph-note {
+    font-size: var(--fs-xs);
+    color: var(--text-muted);
+    margin-top: 0.5rem;
+  }
+  .contact__card {
+    padding: clamp(1.2rem, 3vw, 2.4rem);
+    background: var(--glass-strong);
+  }
+  .form {
+    display: grid;
+    gap: var(--sp-4);
+  }
+  .form__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sp-4);
+  }
+  .field {
+    display: grid;
+    gap: 0.4rem;
+    align-content: start;
+  }
+  .field--full {
+    grid-column: 1 / -1;
+  }
+  label {
+    font-size: var(--fs-sm);
+    font-weight: 600;
+  }
+  label span {
+    color: var(--warm);
+  }
+  input[type='text'],
+  input[type='email'],
+  input[type='tel'],
+  select,
+  textarea {
+    width: 100%;
+    min-height: 50px;
+    padding: 0.75rem 1rem;
+    border-radius: var(--r-sm);
+    border: 1px solid var(--glass-border);
+    background: color-mix(in srgb, var(--bg-deep) 60%, transparent);
+    color: var(--text);
+    font-size: 1rem;
+    transition:
+      border-color var(--dur-1),
+      box-shadow var(--dur-1);
+  }
+  textarea {
+    resize: vertical;
+    min-height: 96px;
+  }
+  select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9' fill='none' stroke='%239a8fff' stroke-width='2'><path d='m1 1 6 6 6-6'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    padding-right: 2.6rem;
+  }
+  select option {
+    background: var(--bg-elev);
+    color: var(--text);
+  }
+  input::placeholder,
+  textarea::placeholder {
+    color: color-mix(in srgb, var(--text-muted) 75%, transparent);
+  }
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 35%, transparent);
+  }
+  .field.has-err input,
+  .field.has-err select,
+  .field.has-err textarea {
+    border-color: #ff6b81;
+  }
+  .field__err {
+    color: #ff8da0;
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    min-height: 0;
+  }
+  :global([data-theme='light']) .field__err {
+    color: #c0213d;
+  }
+  .field__err:empty {
+    display: none;
+  }
+  .field__hint {
+    font-size: var(--fs-xs);
+    color: var(--text-muted);
+  }
+  .field--check {
+    grid-template-columns: auto 1fr;
+    column-gap: 0.7rem;
+    align-items: start;
+  }
+  .field--check input {
+    width: 22px;
+    height: 22px;
+    margin-top: 0.1rem;
+    accent-color: var(--c-violet);
+  }
+  .field--check label {
+    font-weight: 400;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+  .field--check label a {
+    color: var(--accent);
+    text-decoration: underline;
+  }
+  .field--check .field__err {
+    grid-column: 1 / -1;
+  }
+  .hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+  .turnstile {
+    min-height: 0;
+  }
+  .form__submit {
+    width: 100%;
+    min-height: 58px;
+    font-size: 1.05rem;
+  }
+  .form__spin {
+    display: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 3px solid rgba(255, 255, 255, 0.35);
+    border-top-color: #fff;
+    animation: spin 0.8s linear infinite;
+  }
+  .form.is-busy .form__spin {
+    display: inline-block;
+  }
+  .form.is-busy .arrow {
+    display: none;
+  }
+  .form.is-busy .form__submit {
+    opacity: 0.85;
+    pointer-events: none;
+  }
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  .form__status:empty {
+    display: none;
+  }
+  .form__status {
+    padding: 0.9rem 1.1rem;
+    border-radius: var(--r-sm);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    border: 1px solid;
+  }
+  .form__status.is-error {
+    color: #ffb3c0;
+    border-color: #ff6b81;
+    background: rgba(255, 107, 129, 0.12);
+  }
+  :global([data-theme='light']) .form__status.is-error {
+    color: #9c1630;
+  }
+  .form__status.is-ok {
+    color: var(--c-mint);
+    border-color: var(--c-mint);
+    background: rgba(124, 242, 196, 0.1);
+  }
+  :global([data-theme='light']) .form__status.is-ok {
+    color: #0a6b47;
+    border-color: #0a8a5b;
+  }
+  .form__status a {
+    text-decoration: underline;
+  }
+  .form__fine {
+    font-size: var(--fs-xs);
+    color: var(--text-muted);
+    text-align: center;
+  }
+  @media (max-width: 960px) {
+    .contact__grid {
+      grid-template-columns: 1fr;
+    }
+    .contact__copy {
+      position: static;
+    }
+  }
+  @media (max-width: 560px) {
+    .form__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
