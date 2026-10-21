@@ -3,7 +3,6 @@ name: Deploy Vetrina to GitHub Pages
 on:
   push:
     branches: [main, master]
-    paths: ['.github/workflows/pages.yml']
   workflow_dispatch:
 
 permissions:
